@@ -6,8 +6,6 @@ import numpy as np
 import json
 import os # os.cpu_count()
 
-# --- 配置导入 ---
-# (与json_generator.py和sem_segmentation_dataset.py类似的导入逻辑)
 try:
     from configs import base as cfg_base
     from configs import json_config as cfg_json_gen

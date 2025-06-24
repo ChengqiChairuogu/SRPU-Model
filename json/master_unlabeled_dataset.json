@@ -1,0 +1,2295 @@
+{
+    "dataset_name": "SEM_Unlabeled_Dataset_Master",
+    "description": "Master list of all unlabeled SEM images.",
+    "root_raw_image_dir": "data/raw",
+    "input_depth": 3,
+    "num_samples": 254,
+    "samples": [
+        {
+            "sample_id": "4.2V_4.2V-001_centerFrameIdx0001",
+            "frames": [
+                "4.2V-001.png",
+                "4.2V-001.png",
+                "4.2V-002.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-002_centerFrameIdx0002",
+            "frames": [
+                "4.2V-001.png",
+                "4.2V-002.png",
+                "4.2V-003.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-003_centerFrameIdx0003",
+            "frames": [
+                "4.2V-002.png",
+                "4.2V-003.png",
+                "4.2V-004.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-004_centerFrameIdx0004",
+            "frames": [
+                "4.2V-003.png",
+                "4.2V-004.png",
+                "4.2V-005.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-005_centerFrameIdx0005",
+            "frames": [
+                "4.2V-004.png",
+                "4.2V-005.png",
+                "4.2V-006.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-006_centerFrameIdx0006",
+            "frames": [
+                "4.2V-005.png",
+                "4.2V-006.png",
+                "4.2V-007.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-007_centerFrameIdx0007",
+            "frames": [
+                "4.2V-006.png",
+                "4.2V-007.png",
+                "4.2V-008.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-008_centerFrameIdx0008",
+            "frames": [
+                "4.2V-007.png",
+                "4.2V-008.png",
+                "4.2V-016.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-016_centerFrameIdx0016",
+            "frames": [
+                "4.2V-008.png",
+                "4.2V-016.png",
+                "4.2V-017.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-017_centerFrameIdx0017",
+            "frames": [
+                "4.2V-016.png",
+                "4.2V-017.png",
+                "4.2V-018.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-018_centerFrameIdx0018",
+            "frames": [
+                "4.2V-017.png",
+                "4.2V-018.png",
+                "4.2V-019.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-019_centerFrameIdx0019",
+            "frames": [
+                "4.2V-018.png",
+                "4.2V-019.png",
+                "4.2V-020.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-020_centerFrameIdx0020",
+            "frames": [
+                "4.2V-019.png",
+                "4.2V-020.png",
+                "4.2V-021.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-021_centerFrameIdx0021",
+            "frames": [
+                "4.2V-020.png",
+                "4.2V-021.png",
+                "4.2V-022.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-022_centerFrameIdx0022",
+            "frames": [
+                "4.2V-021.png",
+                "4.2V-022.png",
+                "4.2V-023.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-023_centerFrameIdx0023",
+            "frames": [
+                "4.2V-022.png",
+                "4.2V-023.png",
+                "4.2V-024.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-024_centerFrameIdx0024",
+            "frames": [
+                "4.2V-023.png",
+                "4.2V-024.png",
+                "4.2V-025.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-025_centerFrameIdx0025",
+            "frames": [
+                "4.2V-024.png",
+                "4.2V-025.png",
+                "4.2V-026.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-026_centerFrameIdx0026",
+            "frames": [
+                "4.2V-025.png",
+                "4.2V-026.png",
+                "4.2V-027.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-027_centerFrameIdx0027",
+            "frames": [
+                "4.2V-026.png",
+                "4.2V-027.png",
+                "4.2V-028.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-028_centerFrameIdx0028",
+            "frames": [
+                "4.2V-027.png",
+                "4.2V-028.png",
+                "4.2V-029.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-029_centerFrameIdx0029",
+            "frames": [
+                "4.2V-028.png",
+                "4.2V-029.png",
+                "4.2V-030.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-030_centerFrameIdx0030",
+            "frames": [
+                "4.2V-029.png",
+                "4.2V-030.png",
+                "4.2V-031.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-031_centerFrameIdx0031",
+            "frames": [
+                "4.2V-030.png",
+                "4.2V-031.png",
+                "4.2V-032.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-032_centerFrameIdx0032",
+            "frames": [
+                "4.2V-031.png",
+                "4.2V-032.png",
+                "4.2V-033.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-033_centerFrameIdx0033",
+            "frames": [
+                "4.2V-032.png",
+                "4.2V-033.png",
+                "4.2V-034.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-034_centerFrameIdx0034",
+            "frames": [
+                "4.2V-033.png",
+                "4.2V-034.png",
+                "4.2V-035.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-035_centerFrameIdx0035",
+            "frames": [
+                "4.2V-034.png",
+                "4.2V-035.png",
+                "4.2V-036.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-036_centerFrameIdx0036",
+            "frames": [
+                "4.2V-035.png",
+                "4.2V-036.png",
+                "4.2V-037.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-037_centerFrameIdx0037",
+            "frames": [
+                "4.2V-036.png",
+                "4.2V-037.png",
+                "4.2V-038.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-038_centerFrameIdx0038",
+            "frames": [
+                "4.2V-037.png",
+                "4.2V-038.png",
+                "4.2V-039.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-039_centerFrameIdx0039",
+            "frames": [
+                "4.2V-038.png",
+                "4.2V-039.png",
+                "4.2V-040.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-040_centerFrameIdx0040",
+            "frames": [
+                "4.2V-039.png",
+                "4.2V-040.png",
+                "4.2V-041.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-041_centerFrameIdx0041",
+            "frames": [
+                "4.2V-040.png",
+                "4.2V-041.png",
+                "4.2V-042.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-042_centerFrameIdx0042",
+            "frames": [
+                "4.2V-041.png",
+                "4.2V-042.png",
+                "4.2V-043.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-043_centerFrameIdx0043",
+            "frames": [
+                "4.2V-042.png",
+                "4.2V-043.png",
+                "4.2V-044.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-044_centerFrameIdx0044",
+            "frames": [
+                "4.2V-043.png",
+                "4.2V-044.png",
+                "4.2V-045.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-045_centerFrameIdx0045",
+            "frames": [
+                "4.2V-044.png",
+                "4.2V-045.png",
+                "4.2V-046.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-046_centerFrameIdx0046",
+            "frames": [
+                "4.2V-045.png",
+                "4.2V-046.png",
+                "4.2V-047.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-047_centerFrameIdx0047",
+            "frames": [
+                "4.2V-046.png",
+                "4.2V-047.png",
+                "4.2V-048.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-048_centerFrameIdx0048",
+            "frames": [
+                "4.2V-047.png",
+                "4.2V-048.png",
+                "4.2V-049.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-049_centerFrameIdx0049",
+            "frames": [
+                "4.2V-048.png",
+                "4.2V-049.png",
+                "4.2V-050.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-050_centerFrameIdx0050",
+            "frames": [
+                "4.2V-049.png",
+                "4.2V-050.png",
+                "4.2V-051.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-051_centerFrameIdx0051",
+            "frames": [
+                "4.2V-050.png",
+                "4.2V-051.png",
+                "4.2V-052.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-052_centerFrameIdx0052",
+            "frames": [
+                "4.2V-051.png",
+                "4.2V-052.png",
+                "4.2V-053.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-053_centerFrameIdx0053",
+            "frames": [
+                "4.2V-052.png",
+                "4.2V-053.png",
+                "4.2V-054.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-054_centerFrameIdx0054",
+            "frames": [
+                "4.2V-053.png",
+                "4.2V-054.png",
+                "4.2V-055.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-055_centerFrameIdx0055",
+            "frames": [
+                "4.2V-054.png",
+                "4.2V-055.png",
+                "4.2V-056.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-056_centerFrameIdx0056",
+            "frames": [
+                "4.2V-055.png",
+                "4.2V-056.png",
+                "4.2V-057.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-057_centerFrameIdx0057",
+            "frames": [
+                "4.2V-056.png",
+                "4.2V-057.png",
+                "4.2V-058.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-058_centerFrameIdx0058",
+            "frames": [
+                "4.2V-057.png",
+                "4.2V-058.png",
+                "4.2V-059.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-059_centerFrameIdx0059",
+            "frames": [
+                "4.2V-058.png",
+                "4.2V-059.png",
+                "4.2V-060.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-060_centerFrameIdx0060",
+            "frames": [
+                "4.2V-059.png",
+                "4.2V-060.png",
+                "4.2V-061.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-061_centerFrameIdx0061",
+            "frames": [
+                "4.2V-060.png",
+                "4.2V-061.png",
+                "4.2V-062.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-062_centerFrameIdx0062",
+            "frames": [
+                "4.2V-061.png",
+                "4.2V-062.png",
+                "4.2V-063.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-063_centerFrameIdx0063",
+            "frames": [
+                "4.2V-062.png",
+                "4.2V-063.png",
+                "4.2V-064.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-064_centerFrameIdx0064",
+            "frames": [
+                "4.2V-063.png",
+                "4.2V-064.png",
+                "4.2V-065.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-065_centerFrameIdx0065",
+            "frames": [
+                "4.2V-064.png",
+                "4.2V-065.png",
+                "4.2V-066.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-066_centerFrameIdx0066",
+            "frames": [
+                "4.2V-065.png",
+                "4.2V-066.png",
+                "4.2V-067.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-067_centerFrameIdx0067",
+            "frames": [
+                "4.2V-066.png",
+                "4.2V-067.png",
+                "4.2V-068.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-068_centerFrameIdx0068",
+            "frames": [
+                "4.2V-067.png",
+                "4.2V-068.png",
+                "4.2V-069.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-069_centerFrameIdx0069",
+            "frames": [
+                "4.2V-068.png",
+                "4.2V-069.png",
+                "4.2V-070.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-070_centerFrameIdx0070",
+            "frames": [
+                "4.2V-069.png",
+                "4.2V-070.png",
+                "4.2V-071.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-071_centerFrameIdx0071",
+            "frames": [
+                "4.2V-070.png",
+                "4.2V-071.png",
+                "4.2V-072.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-072_centerFrameIdx0072",
+            "frames": [
+                "4.2V-071.png",
+                "4.2V-072.png",
+                "4.2V-073.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-073_centerFrameIdx0073",
+            "frames": [
+                "4.2V-072.png",
+                "4.2V-073.png",
+                "4.2V-074.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-074_centerFrameIdx0074",
+            "frames": [
+                "4.2V-073.png",
+                "4.2V-074.png",
+                "4.2V-075.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-075_centerFrameIdx0075",
+            "frames": [
+                "4.2V-074.png",
+                "4.2V-075.png",
+                "4.2V-076.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-076_centerFrameIdx0076",
+            "frames": [
+                "4.2V-075.png",
+                "4.2V-076.png",
+                "4.2V-077.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-077_centerFrameIdx0077",
+            "frames": [
+                "4.2V-076.png",
+                "4.2V-077.png",
+                "4.2V-078.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-078_centerFrameIdx0078",
+            "frames": [
+                "4.2V-077.png",
+                "4.2V-078.png",
+                "4.2V-079.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-079_centerFrameIdx0079",
+            "frames": [
+                "4.2V-078.png",
+                "4.2V-079.png",
+                "4.2V-080.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-080_centerFrameIdx0080",
+            "frames": [
+                "4.2V-079.png",
+                "4.2V-080.png",
+                "4.2V-081.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-081_centerFrameIdx0081",
+            "frames": [
+                "4.2V-080.png",
+                "4.2V-081.png",
+                "4.2V-082.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-082_centerFrameIdx0082",
+            "frames": [
+                "4.2V-081.png",
+                "4.2V-082.png",
+                "4.2V-083.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-083_centerFrameIdx0083",
+            "frames": [
+                "4.2V-082.png",
+                "4.2V-083.png",
+                "4.2V-084.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-084_centerFrameIdx0084",
+            "frames": [
+                "4.2V-083.png",
+                "4.2V-084.png",
+                "4.2V-085.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-085_centerFrameIdx0085",
+            "frames": [
+                "4.2V-084.png",
+                "4.2V-085.png",
+                "4.2V-086.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-086_centerFrameIdx0086",
+            "frames": [
+                "4.2V-085.png",
+                "4.2V-086.png",
+                "4.2V-087.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-087_centerFrameIdx0087",
+            "frames": [
+                "4.2V-086.png",
+                "4.2V-087.png",
+                "4.2V-088.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-088_centerFrameIdx0088",
+            "frames": [
+                "4.2V-087.png",
+                "4.2V-088.png",
+                "4.2V-089.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-089_centerFrameIdx0089",
+            "frames": [
+                "4.2V-088.png",
+                "4.2V-089.png",
+                "4.2V-090.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-090_centerFrameIdx0090",
+            "frames": [
+                "4.2V-089.png",
+                "4.2V-090.png",
+                "4.2V-091.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-091_centerFrameIdx0091",
+            "frames": [
+                "4.2V-090.png",
+                "4.2V-091.png",
+                "4.2V-092.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-092_centerFrameIdx0092",
+            "frames": [
+                "4.2V-091.png",
+                "4.2V-092.png",
+                "4.2V-093.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-093_centerFrameIdx0093",
+            "frames": [
+                "4.2V-092.png",
+                "4.2V-093.png",
+                "4.2V-094.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-094_centerFrameIdx0094",
+            "frames": [
+                "4.2V-093.png",
+                "4.2V-094.png",
+                "4.2V-095.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-095_centerFrameIdx0095",
+            "frames": [
+                "4.2V-094.png",
+                "4.2V-095.png",
+                "4.2V-096.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-096_centerFrameIdx0096",
+            "frames": [
+                "4.2V-095.png",
+                "4.2V-096.png",
+                "4.2V-097.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-097_centerFrameIdx0097",
+            "frames": [
+                "4.2V-096.png",
+                "4.2V-097.png",
+                "4.2V-098.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-098_centerFrameIdx0098",
+            "frames": [
+                "4.2V-097.png",
+                "4.2V-098.png",
+                "4.2V-099.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-099_centerFrameIdx0099",
+            "frames": [
+                "4.2V-098.png",
+                "4.2V-099.png",
+                "4.2V-100.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-100_centerFrameIdx0100",
+            "frames": [
+                "4.2V-099.png",
+                "4.2V-100.png",
+                "4.2V-101.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-101_centerFrameIdx0101",
+            "frames": [
+                "4.2V-100.png",
+                "4.2V-101.png",
+                "4.2V-102.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-102_centerFrameIdx0102",
+            "frames": [
+                "4.2V-101.png",
+                "4.2V-102.png",
+                "4.2V-103.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-103_centerFrameIdx0103",
+            "frames": [
+                "4.2V-102.png",
+                "4.2V-103.png",
+                "4.2V-104.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-104_centerFrameIdx0104",
+            "frames": [
+                "4.2V-103.png",
+                "4.2V-104.png",
+                "4.2V-105.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-105_centerFrameIdx0105",
+            "frames": [
+                "4.2V-104.png",
+                "4.2V-105.png",
+                "4.2V-106.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-106_centerFrameIdx0106",
+            "frames": [
+                "4.2V-105.png",
+                "4.2V-106.png",
+                "4.2V-107.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-107_centerFrameIdx0107",
+            "frames": [
+                "4.2V-106.png",
+                "4.2V-107.png",
+                "4.2V-108.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-108_centerFrameIdx0108",
+            "frames": [
+                "4.2V-107.png",
+                "4.2V-108.png",
+                "4.2V-109.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-109_centerFrameIdx0109",
+            "frames": [
+                "4.2V-108.png",
+                "4.2V-109.png",
+                "4.2V-110.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-110_centerFrameIdx0110",
+            "frames": [
+                "4.2V-109.png",
+                "4.2V-110.png",
+                "4.2V-111.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-111_centerFrameIdx0111",
+            "frames": [
+                "4.2V-110.png",
+                "4.2V-111.png",
+                "4.2V-112.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-112_centerFrameIdx0112",
+            "frames": [
+                "4.2V-111.png",
+                "4.2V-112.png",
+                "4.2V-113.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-113_centerFrameIdx0113",
+            "frames": [
+                "4.2V-112.png",
+                "4.2V-113.png",
+                "4.2V-114.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-114_centerFrameIdx0114",
+            "frames": [
+                "4.2V-113.png",
+                "4.2V-114.png",
+                "4.2V-115.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-115_centerFrameIdx0115",
+            "frames": [
+                "4.2V-114.png",
+                "4.2V-115.png",
+                "4.2V-116.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-116_centerFrameIdx0116",
+            "frames": [
+                "4.2V-115.png",
+                "4.2V-116.png",
+                "4.2V-117.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-117_centerFrameIdx0117",
+            "frames": [
+                "4.2V-116.png",
+                "4.2V-117.png",
+                "4.2V-118.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-118_centerFrameIdx0118",
+            "frames": [
+                "4.2V-117.png",
+                "4.2V-118.png",
+                "4.2V-119.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-119_centerFrameIdx0119",
+            "frames": [
+                "4.2V-118.png",
+                "4.2V-119.png",
+                "4.2V-120.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-120_centerFrameIdx0120",
+            "frames": [
+                "4.2V-119.png",
+                "4.2V-120.png",
+                "4.2V-121.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-121_centerFrameIdx0121",
+            "frames": [
+                "4.2V-120.png",
+                "4.2V-121.png",
+                "4.2V-122.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-122_centerFrameIdx0122",
+            "frames": [
+                "4.2V-121.png",
+                "4.2V-122.png",
+                "4.2V-123.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-123_centerFrameIdx0123",
+            "frames": [
+                "4.2V-122.png",
+                "4.2V-123.png",
+                "4.2V-124.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-124_centerFrameIdx0124",
+            "frames": [
+                "4.2V-123.png",
+                "4.2V-124.png",
+                "4.2V-125.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-125_centerFrameIdx0125",
+            "frames": [
+                "4.2V-124.png",
+                "4.2V-125.png",
+                "4.2V-126.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-126_centerFrameIdx0126",
+            "frames": [
+                "4.2V-125.png",
+                "4.2V-126.png",
+                "4.2V-127.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-127_centerFrameIdx0127",
+            "frames": [
+                "4.2V-126.png",
+                "4.2V-127.png",
+                "4.2V-128.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-128_centerFrameIdx0128",
+            "frames": [
+                "4.2V-127.png",
+                "4.2V-128.png",
+                "4.2V-129.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-129_centerFrameIdx0129",
+            "frames": [
+                "4.2V-128.png",
+                "4.2V-129.png",
+                "4.2V-130.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-130_centerFrameIdx0130",
+            "frames": [
+                "4.2V-129.png",
+                "4.2V-130.png",
+                "4.2V-131.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-131_centerFrameIdx0131",
+            "frames": [
+                "4.2V-130.png",
+                "4.2V-131.png",
+                "4.2V-132.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-132_centerFrameIdx0132",
+            "frames": [
+                "4.2V-131.png",
+                "4.2V-132.png",
+                "4.2V-133.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-133_centerFrameIdx0133",
+            "frames": [
+                "4.2V-132.png",
+                "4.2V-133.png",
+                "4.2V-134.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-134_centerFrameIdx0134",
+            "frames": [
+                "4.2V-133.png",
+                "4.2V-134.png",
+                "4.2V-135.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-135_centerFrameIdx0135",
+            "frames": [
+                "4.2V-134.png",
+                "4.2V-135.png",
+                "4.2V-136.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-136_centerFrameIdx0136",
+            "frames": [
+                "4.2V-135.png",
+                "4.2V-136.png",
+                "4.2V-137.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-137_centerFrameIdx0137",
+            "frames": [
+                "4.2V-136.png",
+                "4.2V-137.png",
+                "4.2V-138.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-138_centerFrameIdx0138",
+            "frames": [
+                "4.2V-137.png",
+                "4.2V-138.png",
+                "4.2V-139.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-139_centerFrameIdx0139",
+            "frames": [
+                "4.2V-138.png",
+                "4.2V-139.png",
+                "4.2V-140.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-140_centerFrameIdx0140",
+            "frames": [
+                "4.2V-139.png",
+                "4.2V-140.png",
+                "4.2V-141.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-141_centerFrameIdx0141",
+            "frames": [
+                "4.2V-140.png",
+                "4.2V-141.png",
+                "4.2V-142.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-142_centerFrameIdx0142",
+            "frames": [
+                "4.2V-141.png",
+                "4.2V-142.png",
+                "4.2V-143.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-143_centerFrameIdx0143",
+            "frames": [
+                "4.2V-142.png",
+                "4.2V-143.png",
+                "4.2V-144.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-144_centerFrameIdx0144",
+            "frames": [
+                "4.2V-143.png",
+                "4.2V-144.png",
+                "4.2V-145.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-145_centerFrameIdx0145",
+            "frames": [
+                "4.2V-144.png",
+                "4.2V-145.png",
+                "4.2V-146.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-146_centerFrameIdx0146",
+            "frames": [
+                "4.2V-145.png",
+                "4.2V-146.png",
+                "4.2V-147.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-147_centerFrameIdx0147",
+            "frames": [
+                "4.2V-146.png",
+                "4.2V-147.png",
+                "4.2V-148.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-148_centerFrameIdx0148",
+            "frames": [
+                "4.2V-147.png",
+                "4.2V-148.png",
+                "4.2V-149.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-149_centerFrameIdx0149",
+            "frames": [
+                "4.2V-148.png",
+                "4.2V-149.png",
+                "4.2V-150.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-150_centerFrameIdx0150",
+            "frames": [
+                "4.2V-149.png",
+                "4.2V-150.png",
+                "4.2V-151.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-151_centerFrameIdx0151",
+            "frames": [
+                "4.2V-150.png",
+                "4.2V-151.png",
+                "4.2V-152.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-152_centerFrameIdx0152",
+            "frames": [
+                "4.2V-151.png",
+                "4.2V-152.png",
+                "4.2V-153.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-153_centerFrameIdx0153",
+            "frames": [
+                "4.2V-152.png",
+                "4.2V-153.png",
+                "4.2V-154.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-154_centerFrameIdx0154",
+            "frames": [
+                "4.2V-153.png",
+                "4.2V-154.png",
+                "4.2V-155.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-155_centerFrameIdx0155",
+            "frames": [
+                "4.2V-154.png",
+                "4.2V-155.png",
+                "4.2V-156.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-156_centerFrameIdx0156",
+            "frames": [
+                "4.2V-155.png",
+                "4.2V-156.png",
+                "4.2V-157.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-157_centerFrameIdx0157",
+            "frames": [
+                "4.2V-156.png",
+                "4.2V-157.png",
+                "4.2V-158.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-158_centerFrameIdx0158",
+            "frames": [
+                "4.2V-157.png",
+                "4.2V-158.png",
+                "4.2V-159.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-159_centerFrameIdx0159",
+            "frames": [
+                "4.2V-158.png",
+                "4.2V-159.png",
+                "4.2V-160.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-160_centerFrameIdx0160",
+            "frames": [
+                "4.2V-159.png",
+                "4.2V-160.png",
+                "4.2V-161.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-161_centerFrameIdx0161",
+            "frames": [
+                "4.2V-160.png",
+                "4.2V-161.png",
+                "4.2V-162.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-162_centerFrameIdx0162",
+            "frames": [
+                "4.2V-161.png",
+                "4.2V-162.png",
+                "4.2V-163.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-163_centerFrameIdx0163",
+            "frames": [
+                "4.2V-162.png",
+                "4.2V-163.png",
+                "4.2V-164.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-164_centerFrameIdx0164",
+            "frames": [
+                "4.2V-163.png",
+                "4.2V-164.png",
+                "4.2V-165.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-165_centerFrameIdx0165",
+            "frames": [
+                "4.2V-164.png",
+                "4.2V-165.png",
+                "4.2V-166.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-166_centerFrameIdx0166",
+            "frames": [
+                "4.2V-165.png",
+                "4.2V-166.png",
+                "4.2V-167.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-167_centerFrameIdx0167",
+            "frames": [
+                "4.2V-166.png",
+                "4.2V-167.png",
+                "4.2V-168.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-168_centerFrameIdx0168",
+            "frames": [
+                "4.2V-167.png",
+                "4.2V-168.png",
+                "4.2V-169.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-169_centerFrameIdx0169",
+            "frames": [
+                "4.2V-168.png",
+                "4.2V-169.png",
+                "4.2V-170.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-170_centerFrameIdx0170",
+            "frames": [
+                "4.2V-169.png",
+                "4.2V-170.png",
+                "4.2V-171.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.2V_4.2V-171_centerFrameIdx0171",
+            "frames": [
+                "4.2V-170.png",
+                "4.2V-171.png",
+                "4.2V-171.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-001_centerFrameIdx0001",
+            "frames": [
+                "4.4V-001.png",
+                "4.4V-001.png",
+                "4.4V-002.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-002_centerFrameIdx0002",
+            "frames": [
+                "4.4V-001.png",
+                "4.4V-002.png",
+                "4.4V-003.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-003_centerFrameIdx0003",
+            "frames": [
+                "4.4V-002.png",
+                "4.4V-003.png",
+                "4.4V-004.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-004_centerFrameIdx0004",
+            "frames": [
+                "4.4V-003.png",
+                "4.4V-004.png",
+                "4.4V-005.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-005_centerFrameIdx0005",
+            "frames": [
+                "4.4V-004.png",
+                "4.4V-005.png",
+                "4.4V-014.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-014_centerFrameIdx0014",
+            "frames": [
+                "4.4V-005.png",
+                "4.4V-014.png",
+                "4.4V-015.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-015_centerFrameIdx0015",
+            "frames": [
+                "4.4V-014.png",
+                "4.4V-015.png",
+                "4.4V-016.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-016_centerFrameIdx0016",
+            "frames": [
+                "4.4V-015.png",
+                "4.4V-016.png",
+                "4.4V-017.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-017_centerFrameIdx0017",
+            "frames": [
+                "4.4V-016.png",
+                "4.4V-017.png",
+                "4.4V-018.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-018_centerFrameIdx0018",
+            "frames": [
+                "4.4V-017.png",
+                "4.4V-018.png",
+                "4.4V-019.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-019_centerFrameIdx0019",
+            "frames": [
+                "4.4V-018.png",
+                "4.4V-019.png",
+                "4.4V-020.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-020_centerFrameIdx0020",
+            "frames": [
+                "4.4V-019.png",
+                "4.4V-020.png",
+                "4.4V-021.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-021_centerFrameIdx0021",
+            "frames": [
+                "4.4V-020.png",
+                "4.4V-021.png",
+                "4.4V-022.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-022_centerFrameIdx0022",
+            "frames": [
+                "4.4V-021.png",
+                "4.4V-022.png",
+                "4.4V-023.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-023_centerFrameIdx0023",
+            "frames": [
+                "4.4V-022.png",
+                "4.4V-023.png",
+                "4.4V-024.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-024_centerFrameIdx0024",
+            "frames": [
+                "4.4V-023.png",
+                "4.4V-024.png",
+                "4.4V-025.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-025_centerFrameIdx0025",
+            "frames": [
+                "4.4V-024.png",
+                "4.4V-025.png",
+                "4.4V-026.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-026_centerFrameIdx0026",
+            "frames": [
+                "4.4V-025.png",
+                "4.4V-026.png",
+                "4.4V-027.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-027_centerFrameIdx0027",
+            "frames": [
+                "4.4V-026.png",
+                "4.4V-027.png",
+                "4.4V-028.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-028_centerFrameIdx0028",
+            "frames": [
+                "4.4V-027.png",
+                "4.4V-028.png",
+                "4.4V-029.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-029_centerFrameIdx0029",
+            "frames": [
+                "4.4V-028.png",
+                "4.4V-029.png",
+                "4.4V-030.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-030_centerFrameIdx0030",
+            "frames": [
+                "4.4V-029.png",
+                "4.4V-030.png",
+                "4.4V-031.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-031_centerFrameIdx0031",
+            "frames": [
+                "4.4V-030.png",
+                "4.4V-031.png",
+                "4.4V-032.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-032_centerFrameIdx0032",
+            "frames": [
+                "4.4V-031.png",
+                "4.4V-032.png",
+                "4.4V-033.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-033_centerFrameIdx0033",
+            "frames": [
+                "4.4V-032.png",
+                "4.4V-033.png",
+                "4.4V-034.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-034_centerFrameIdx0034",
+            "frames": [
+                "4.4V-033.png",
+                "4.4V-034.png",
+                "4.4V-035.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-035_centerFrameIdx0035",
+            "frames": [
+                "4.4V-034.png",
+                "4.4V-035.png",
+                "4.4V-036.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-036_centerFrameIdx0036",
+            "frames": [
+                "4.4V-035.png",
+                "4.4V-036.png",
+                "4.4V-037.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-037_centerFrameIdx0037",
+            "frames": [
+                "4.4V-036.png",
+                "4.4V-037.png",
+                "4.4V-038.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-038_centerFrameIdx0038",
+            "frames": [
+                "4.4V-037.png",
+                "4.4V-038.png",
+                "4.4V-039.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-039_centerFrameIdx0039",
+            "frames": [
+                "4.4V-038.png",
+                "4.4V-039.png",
+                "4.4V-040.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-040_centerFrameIdx0040",
+            "frames": [
+                "4.4V-039.png",
+                "4.4V-040.png",
+                "4.4V-041.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-041_centerFrameIdx0041",
+            "frames": [
+                "4.4V-040.png",
+                "4.4V-041.png",
+                "4.4V-042.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-042_centerFrameIdx0042",
+            "frames": [
+                "4.4V-041.png",
+                "4.4V-042.png",
+                "4.4V-043.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-043_centerFrameIdx0043",
+            "frames": [
+                "4.4V-042.png",
+                "4.4V-043.png",
+                "4.4V-044.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-044_centerFrameIdx0044",
+            "frames": [
+                "4.4V-043.png",
+                "4.4V-044.png",
+                "4.4V-045.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-045_centerFrameIdx0045",
+            "frames": [
+                "4.4V-044.png",
+                "4.4V-045.png",
+                "4.4V-046.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "4.4V_4.4V-046_centerFrameIdx0046",
+            "frames": [
+                "4.4V-045.png",
+                "4.4V-046.png",
+                "4.4V-046.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-001_centerFrameIdx0001",
+            "frames": [
+                "pristine-001.png",
+                "pristine-001.png",
+                "pristine-002.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-002_centerFrameIdx0002",
+            "frames": [
+                "pristine-001.png",
+                "pristine-002.png",
+                "pristine-003.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-003_centerFrameIdx0003",
+            "frames": [
+                "pristine-002.png",
+                "pristine-003.png",
+                "pristine-004.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-004_centerFrameIdx0004",
+            "frames": [
+                "pristine-003.png",
+                "pristine-004.png",
+                "pristine-005.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-005_centerFrameIdx0005",
+            "frames": [
+                "pristine-004.png",
+                "pristine-005.png",
+                "pristine-011.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-011_centerFrameIdx0011",
+            "frames": [
+                "pristine-005.png",
+                "pristine-011.png",
+                "pristine-012.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-012_centerFrameIdx0012",
+            "frames": [
+                "pristine-011.png",
+                "pristine-012.png",
+                "pristine-013.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-013_centerFrameIdx0013",
+            "frames": [
+                "pristine-012.png",
+                "pristine-013.png",
+                "pristine-014.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-014_centerFrameIdx0014",
+            "frames": [
+                "pristine-013.png",
+                "pristine-014.png",
+                "pristine-015.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-015_centerFrameIdx0015",
+            "frames": [
+                "pristine-014.png",
+                "pristine-015.png",
+                "pristine-016.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-016_centerFrameIdx0016",
+            "frames": [
+                "pristine-015.png",
+                "pristine-016.png",
+                "pristine-017.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-017_centerFrameIdx0017",
+            "frames": [
+                "pristine-016.png",
+                "pristine-017.png",
+                "pristine-018.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-018_centerFrameIdx0018",
+            "frames": [
+                "pristine-017.png",
+                "pristine-018.png",
+                "pristine-019.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-019_centerFrameIdx0019",
+            "frames": [
+                "pristine-018.png",
+                "pristine-019.png",
+                "pristine-020.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-020_centerFrameIdx0020",
+            "frames": [
+                "pristine-019.png",
+                "pristine-020.png",
+                "pristine-021.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-021_centerFrameIdx0021",
+            "frames": [
+                "pristine-020.png",
+                "pristine-021.png",
+                "pristine-022.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-022_centerFrameIdx0022",
+            "frames": [
+                "pristine-021.png",
+                "pristine-022.png",
+                "pristine-023.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-023_centerFrameIdx0023",
+            "frames": [
+                "pristine-022.png",
+                "pristine-023.png",
+                "pristine-024.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-024_centerFrameIdx0024",
+            "frames": [
+                "pristine-023.png",
+                "pristine-024.png",
+                "pristine-025.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-025_centerFrameIdx0025",
+            "frames": [
+                "pristine-024.png",
+                "pristine-025.png",
+                "pristine-026.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-026_centerFrameIdx0026",
+            "frames": [
+                "pristine-025.png",
+                "pristine-026.png",
+                "pristine-027.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-027_centerFrameIdx0027",
+            "frames": [
+                "pristine-026.png",
+                "pristine-027.png",
+                "pristine-028.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-028_centerFrameIdx0028",
+            "frames": [
+                "pristine-027.png",
+                "pristine-028.png",
+                "pristine-029.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-029_centerFrameIdx0029",
+            "frames": [
+                "pristine-028.png",
+                "pristine-029.png",
+                "pristine-030.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-030_centerFrameIdx0030",
+            "frames": [
+                "pristine-029.png",
+                "pristine-030.png",
+                "pristine-031.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-031_centerFrameIdx0031",
+            "frames": [
+                "pristine-030.png",
+                "pristine-031.png",
+                "pristine-032.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-032_centerFrameIdx0032",
+            "frames": [
+                "pristine-031.png",
+                "pristine-032.png",
+                "pristine-033.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-033_centerFrameIdx0033",
+            "frames": [
+                "pristine-032.png",
+                "pristine-033.png",
+                "pristine-034.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-034_centerFrameIdx0034",
+            "frames": [
+                "pristine-033.png",
+                "pristine-034.png",
+                "pristine-035.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-035_centerFrameIdx0035",
+            "frames": [
+                "pristine-034.png",
+                "pristine-035.png",
+                "pristine-036.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-036_centerFrameIdx0036",
+            "frames": [
+                "pristine-035.png",
+                "pristine-036.png",
+                "pristine-037.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-037_centerFrameIdx0037",
+            "frames": [
+                "pristine-036.png",
+                "pristine-037.png",
+                "pristine-038.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-038_centerFrameIdx0038",
+            "frames": [
+                "pristine-037.png",
+                "pristine-038.png",
+                "pristine-039.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-039_centerFrameIdx0039",
+            "frames": [
+                "pristine-038.png",
+                "pristine-039.png",
+                "pristine-040.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-040_centerFrameIdx0040",
+            "frames": [
+                "pristine-039.png",
+                "pristine-040.png",
+                "pristine-041.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-041_centerFrameIdx0041",
+            "frames": [
+                "pristine-040.png",
+                "pristine-041.png",
+                "pristine-042.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-042_centerFrameIdx0042",
+            "frames": [
+                "pristine-041.png",
+                "pristine-042.png",
+                "pristine-043.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-043_centerFrameIdx0043",
+            "frames": [
+                "pristine-042.png",
+                "pristine-043.png",
+                "pristine-044.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-044_centerFrameIdx0044",
+            "frames": [
+                "pristine-043.png",
+                "pristine-044.png",
+                "pristine-045.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-045_centerFrameIdx0045",
+            "frames": [
+                "pristine-044.png",
+                "pristine-045.png",
+                "pristine-046.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-046_centerFrameIdx0046",
+            "frames": [
+                "pristine-045.png",
+                "pristine-046.png",
+                "pristine-047.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-047_centerFrameIdx0047",
+            "frames": [
+                "pristine-046.png",
+                "pristine-047.png",
+                "pristine-048.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-048_centerFrameIdx0048",
+            "frames": [
+                "pristine-047.png",
+                "pristine-048.png",
+                "pristine-049.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-049_centerFrameIdx0049",
+            "frames": [
+                "pristine-048.png",
+                "pristine-049.png",
+                "pristine-050.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-050_centerFrameIdx0050",
+            "frames": [
+                "pristine-049.png",
+                "pristine-050.png",
+                "pristine-051.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-051_centerFrameIdx0051",
+            "frames": [
+                "pristine-050.png",
+                "pristine-051.png",
+                "pristine-052.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-052_centerFrameIdx0052",
+            "frames": [
+                "pristine-051.png",
+                "pristine-052.png",
+                "pristine-053.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-053_centerFrameIdx0053",
+            "frames": [
+                "pristine-052.png",
+                "pristine-053.png",
+                "pristine-054.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-054_centerFrameIdx0054",
+            "frames": [
+                "pristine-053.png",
+                "pristine-054.png",
+                "pristine-055.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-055_centerFrameIdx0055",
+            "frames": [
+                "pristine-054.png",
+                "pristine-055.png",
+                "pristine-056.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-056_centerFrameIdx0056",
+            "frames": [
+                "pristine-055.png",
+                "pristine-056.png",
+                "pristine-057.png"
+            ],
+            "mask_file": null
+        },
+        {
+            "sample_id": "pristine_pristine-057_centerFrameIdx0057",
+            "frames": [
+                "pristine-056.png",
+                "pristine-057.png",
+                "pristine-057.png"
+            ],
+            "mask_file": null
+        }
+    ]
+}

@@ -1,0 +1,37 @@
+{
+    "dataset_name": "master_labeled_dataset_Test",
+    "description": "Test split.",
+    "root_raw_image_dir": "data/raw",
+    "input_depth": 3,
+    "num_samples": 3,
+    "samples": [
+        {
+            "sample_id": "4.4V_4.4V-013_centerFrameIdx0013",
+            "frames": [
+                "4.4V-012.png",
+                "4.4V-013.png",
+                "4.4V-013.png"
+            ],
+            "mask_file": "4.4V-013.png"
+        },
+        {
+            "sample_id": "4.2V_4.2V-014_centerFrameIdx0014",
+            "frames": [
+                "4.2V-013.png",
+                "4.2V-014.png",
+                "4.2V-015.png"
+            ],
+            "mask_file": "4.2V-014.png"
+        },
+        {
+            "sample_id": "pristine_pristine-010_centerFrameIdx0010",
+            "frames": [
+                "pristine-009.png",
+                "pristine-010.png",
+                "pristine-010.png"
+            ],
+            "mask_file": "pristine-010.png"
+        }
+    ],
+    "root_labeled_mask_dir": "data/labeled"
+}

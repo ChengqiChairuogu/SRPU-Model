@@ -1,0 +1,190 @@
+{
+    "dataset_name": "SEM_Labeled_Dataset_Master",
+    "description": "Master list of all labeled SEM images.",
+    "root_raw_image_dir": "data/raw",
+    "input_depth": 3,
+    "num_samples": 20,
+    "samples": [
+        {
+            "sample_id": "4.2V_4.2V-009_centerFrameIdx0009",
+            "frames": [
+                "4.2V-009.png",
+                "4.2V-009.png",
+                "4.2V-010.png"
+            ],
+            "mask_file": "4.2V-009.png"
+        },
+        {
+            "sample_id": "4.2V_4.2V-010_centerFrameIdx0010",
+            "frames": [
+                "4.2V-009.png",
+                "4.2V-010.png",
+                "4.2V-011.png"
+            ],
+            "mask_file": "4.2V-010.png"
+        },
+        {
+            "sample_id": "4.2V_4.2V-011_centerFrameIdx0011",
+            "frames": [
+                "4.2V-010.png",
+                "4.2V-011.png",
+                "4.2V-012.png"
+            ],
+            "mask_file": "4.2V-011.png"
+        },
+        {
+            "sample_id": "4.2V_4.2V-012_centerFrameIdx0012",
+            "frames": [
+                "4.2V-011.png",
+                "4.2V-012.png",
+                "4.2V-013.png"
+            ],
+            "mask_file": "4.2V-012.png"
+        },
+        {
+            "sample_id": "4.2V_4.2V-013_centerFrameIdx0013",
+            "frames": [
+                "4.2V-012.png",
+                "4.2V-013.png",
+                "4.2V-014.png"
+            ],
+            "mask_file": "4.2V-013.png"
+        },
+        {
+            "sample_id": "4.2V_4.2V-014_centerFrameIdx0014",
+            "frames": [
+                "4.2V-013.png",
+                "4.2V-014.png",
+                "4.2V-015.png"
+            ],
+            "mask_file": "4.2V-014.png"
+        },
+        {
+            "sample_id": "4.2V_4.2V-015_centerFrameIdx0015",
+            "frames": [
+                "4.2V-014.png",
+                "4.2V-015.png",
+                "4.2V-015.png"
+            ],
+            "mask_file": "4.2V-015.png"
+        },
+        {
+            "sample_id": "4.4V_4.4V-006_centerFrameIdx0006",
+            "frames": [
+                "4.4V-006.png",
+                "4.4V-006.png",
+                "4.4V-007.png"
+            ],
+            "mask_file": "4.4V-006.png"
+        },
+        {
+            "sample_id": "4.4V_4.4V-007_centerFrameIdx0007",
+            "frames": [
+                "4.4V-006.png",
+                "4.4V-007.png",
+                "4.4V-008.png"
+            ],
+            "mask_file": "4.4V-007.png"
+        },
+        {
+            "sample_id": "4.4V_4.4V-008_centerFrameIdx0008",
+            "frames": [
+                "4.4V-007.png",
+                "4.4V-008.png",
+                "4.4V-009.png"
+            ],
+            "mask_file": "4.4V-008.png"
+        },
+        {
+            "sample_id": "4.4V_4.4V-009_centerFrameIdx0009",
+            "frames": [
+                "4.4V-008.png",
+                "4.4V-009.png",
+                "4.4V-010.png"
+            ],
+            "mask_file": "4.4V-009.png"
+        },
+        {
+            "sample_id": "4.4V_4.4V-010_centerFrameIdx0010",
+            "frames": [
+                "4.4V-009.png",
+                "4.4V-010.png",
+                "4.4V-011.png"
+            ],
+            "mask_file": "4.4V-010.png"
+        },
+        {
+            "sample_id": "4.4V_4.4V-011_centerFrameIdx0011",
+            "frames": [
+                "4.4V-010.png",
+                "4.4V-011.png",
+                "4.4V-012.png"
+            ],
+            "mask_file": "4.4V-011.png"
+        },
+        {
+            "sample_id": "4.4V_4.4V-012_centerFrameIdx0012",
+            "frames": [
+                "4.4V-011.png",
+                "4.4V-012.png",
+                "4.4V-013.png"
+            ],
+            "mask_file": "4.4V-012.png"
+        },
+        {
+            "sample_id": "4.4V_4.4V-013_centerFrameIdx0013",
+            "frames": [
+                "4.4V-012.png",
+                "4.4V-013.png",
+                "4.4V-013.png"
+            ],
+            "mask_file": "4.4V-013.png"
+        },
+        {
+            "sample_id": "pristine_pristine-006_centerFrameIdx0006",
+            "frames": [
+                "pristine-006.png",
+                "pristine-006.png",
+                "pristine-007.png"
+            ],
+            "mask_file": "pristine-006.png"
+        },
+        {
+            "sample_id": "pristine_pristine-007_centerFrameIdx0007",
+            "frames": [
+                "pristine-006.png",
+                "pristine-007.png",
+                "pristine-008.png"
+            ],
+            "mask_file": "pristine-007.png"
+        },
+        {
+            "sample_id": "pristine_pristine-008_centerFrameIdx0008",
+            "frames": [
+                "pristine-007.png",
+                "pristine-008.png",
+                "pristine-009.png"
+            ],
+            "mask_file": "pristine-008.png"
+        },
+        {
+            "sample_id": "pristine_pristine-009_centerFrameIdx0009",
+            "frames": [
+                "pristine-008.png",
+                "pristine-009.png",
+                "pristine-010.png"
+            ],
+            "mask_file": "pristine-009.png"
+        },
+        {
+            "sample_id": "pristine_pristine-010_centerFrameIdx0010",
+            "frames": [
+                "pristine-009.png",
+                "pristine-010.png",
+                "pristine-010.png"
+            ],
+            "mask_file": "pristine-010.png"
+        }
+    ],
+    "root_labeled_mask_dir": "data/labeled"
+}
