@@ -2,18 +2,18 @@
 
 ## 1\. Project Overview
 
-`SRPU-Model` is an advanced project for Scanning Electron Microscope (SEM) image segmentation. [cite\_start]It aims to build a sustainable, self-optimizing intelligent segmentation system by combining Supervised Learning, Self-Supervised Learning, Semi-Supervised Learning, and Active Learning strategies[cite: 3]. [cite\_start]The core philosophy of this project is to leverage a limited amount of labeled data along with a vast pool of unlabeled data to progressively enhance the model's performance, ultimately creating a "living" system capable of continuous learning and evolution from new data[cite: 3, 106].
+`SRPU-Model` is an advanced project for Scanning Electron Microscope (SEM) image segmentation. It aims to build a sustainable, self-optimizing intelligent segmentation system by combining Supervised Learning, Self-Supervised Learning, Semi-Supervised Learning, and Active Learning strategies. The core philosophy of this project is to leverage a limited amount of labeled data along with a vast pool of unlabeled data to progressively enhance the model's performance, ultimately creating a "living" system capable of continuous learning and evolution from new data.
 
-[cite\_start]The project adopts a modular architecture that clearly separates data processing, model definitions, task execution, and configuration management, making it easy to extend and maintain[cite: 108].
+The project adopts a modular architecture that clearly separates data processing, model definitions, task execution, and configuration management, making it easy to extend and maintain.
 
 ## 2\. Project Goals
 
 The long-term goal of this project is to construct a closed-loop, self-evolving segmentation system, achieved through the following phases:
 
-  * [cite\_start]**Preparation Phase:** Establish a solid project foundation, including environment setup, data preparation, and a reliable supervised learning baseline model[cite: 5].
-  * [cite\_start]**Phase 1: Learning General Visual Knowledge.** Utilize Self-Supervised Learning (SSL) to enable the model to learn underlying features from a large amount of unlabeled SEM images[cite: 27, 38]. [cite\_start]This is augmented by leveraging external pre-trained models (e.g., ResNet, EfficientNet) for enhanced capabilities[cite: 27, 49].
-  * [cite\_start]**Phase 2: Efficient Utilization of Data and Human Resources.** Employ Semi-Supervised Learning (pseudo-labeling) to extract knowledge from unlabeled data[cite: 51]. [cite\_start]This is combined with Active Learning strategies to intelligently select the most valuable samples for manual annotation, thereby maximizing annotation efficiency[cite: 51, 82].
-  * [cite\_start]**Phase 3: Automation and Continuous Evolution.** Explore the use of generative models to create novel training data to fill knowledge gaps[cite: 84, 93]. [cite\_start]The final objective is to build an automated MLOps pipeline that can handle monitoring, feedback, retraining, and deployment automatically[cite: 95, 106].
+**Preparation Phase:** Establish a solid project foundation, including environment setup, data preparation, and a reliable supervised learning baseline model.
+  **Phase 1: Learning General Visual Knowledge.** Utilize Self-Supervised Learning (SSL) to enable the model to learn underlying features from a large amount of unlabeled SEM images. This is augmented by leveraging external pre-trained models (e.g., ResNet, EfficientNet) for enhanced capabilities.
+  **Phase 2: Efficient Utilization of Data and Human Resources.** Employ Semi-Supervised Learning (pseudo-labeling) to extract knowledge from unlabeled data. This is combined with Active Learning strategies to intelligently select the most valuable samples for manual annotation, thereby maximizing annotation efficiency.
+  **Phase 3: Automation and Continuous Evolution.** Explore the use of generative models to create novel training data to fill knowledge gaps. The final objective is to build an automated MLOps pipeline that can handle monitoring, feedback, retraining, and deployment automatically.
 
 ## 3\. Project Structure
 
@@ -56,7 +56,7 @@ SRPU-Model/
 2.  **Data Loading (`datasets/sem_datasets.py`)**:
 
       * The `SemSegmentationDataset` class loads images and masks based on the JSON files.
-      * [cite\_start]Supports the conversion from RGB color masks to class indices based on the `MAPPING` in `configs/base.py`[cite: 16].
+      * Supports the conversion from RGB color masks to class indices based on the `MAPPING` in `configs/base.py`.
       * Integrates the `albumentations` library for powerful data augmentation.
 
 3.  **Data Augmentation & Normalization (`utils/augmentation.py`)**:
@@ -68,22 +68,22 @@ SRPU-Model/
 
   * **Encoders (`models/encoders/`)**:
 
-      * [cite\_start]`unet_encoder.py`: A classic U-Net encoder structure[cite: 19].
+      * `unet_encoder.py`: A classic U-Net encoder structure.
       * `resnet_encoder.py`: Supports ResNet34 and ResNet50 as encoders, with the ability to load ImageNet pre-trained weights.
-      * [cite\_start]`efficientnet_encoder.py`: Supports EfficientNet as an encoder[cite: 41].
-      * [cite\_start]`dinov2_encoder.py`: Supports DINOv2 as an encoder[cite: 34, 42].
+      * `efficientnet_encoder.py`: Supports EfficientNet as an encoder.
+      * `dinov2_encoder.py`: Supports DINOv2 as an encoder.
 
   * **Decoders (`models/decoders/`)**:
 
-      * [cite\_start]`unet_decoder.py`: A classic U-Net decoder, compatible with skip connections from the encoder[cite: 19].
+      * `unet_decoder.py`: A classic U-Net decoder, compatible with skip connections from the encoder.
       * `deeplab_decoder.py`: A DeepLabV3+ decoder, featuring an Atrous Spatial Pyramid Pooling (ASPP) module.
 
 ### 4.3 Training Tasks
 
   * **Supervised Learning (`tasks/train_task.py`)**:
-      * [cite\_start]Implements a complete supervised training pipeline[cite: 21].
+      * Implements a complete supervised training pipeline.
       * Supports various strategies, including training from scratch, fine-tuning with a frozen encoder, and fine-tuning with differential learning rates.
-      * [cite\_start]Integrates with TensorBoard for visualizing the training process[cite: 109].
+      * Integrates with TensorBoard for visualizing the training process.
       * Automatically saves the best model and the latest checkpoint, enabling resuming from a checkpoint.
 
 ## 5\. Environment Setup
@@ -98,14 +98,14 @@ conda env create -f environment.yml
 conda activate SRPU-Model
 ```
 
-[cite\_start]This environment includes all necessary dependencies to run the project, such as PyTorch, TorchVision, and OpenCV[cite: 7].
+This environment includes all necessary dependencies to run the project, such as PyTorch, TorchVision, and OpenCV.
 
 ## 6\. Usage Guide
 
 ### Step 1: Prepare Your Data
 
-1.  [cite\_start]Place all your original SEM images (e.g., `.png`, `.tif`) into the `data/raw/` directory[cite: 9].
-2.  [cite\_start]Place your labeled mask images (PNG format is recommended) into the `data/labeled/` directory[cite: 10]. **Please ensure that the filename of each mask matches the corresponding original image's filename (excluding the extension).**
+1.  Place all your original SEM images (e.g., `.png`, `.tif`) into the `data/raw/` directory.
+2.  Place your labeled mask images (PNG format is recommended) into the `data/labeled/` directory. **Please ensure that the filename of each mask matches the corresponding original image's filename (excluding the extension).**
 
 ### Step 2: Generate Dataset Indexes
 
@@ -148,7 +148,7 @@ This script will read `master_labeled_dataset_train.json`, compute the statistic
 python tasks/train_task.py
 ```
 
-[cite\_start]During training, logs will be saved in the `logs/` directory, and model weights will be saved in `models/checkpoints/`[cite: 22]. You can monitor the process using TensorBoard:
+During training, logs will be saved in the `logs/` directory, and model weights will be saved in `models/checkpoints/`. You can monitor the process using TensorBoard:
 
 ```bash
 tensorboard --logdir logs
@@ -158,6 +158,5 @@ tensorboard --logdir logs
 
 Based on your project plan, the following features can be implemented progressively:
 
-  * [cite\_start]**Self-Supervised Pre-training (`tasks/ssl_pretrain_task.py`)**: Pre-train the encoder on a large volume of unlabeled data[cite: 29].
-  * [cite\_start]**Semi-Supervised & Active Learning**: Develop pseudo-labeling and intelligent sampling strategies[cite: 53, 68].
-  * [cite\_start]**Automation Pipeline (`pipeline.py`)**: Orchestrate the entire workflow to achieve a closed-loop, automated system[cite: 95].
+  **Self-Supervised Pre-training (`tasks/ssl_pretrain_task.py`)**: Pre-train the encoder on a large volume of unlabeled data**Semi-Supervised & Active Learning**: Develop pseudo-labeling and intelligent sampling strategies.
+  **Automation Pipeline (`pipeline.py`)**: Orchestrate the entire workflow to achieve a closed-loop, automated system.
