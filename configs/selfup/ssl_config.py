@@ -1,46 +1,36 @@
 # self_segmentation/configs/selfup/ssl_config.py
-# 自监督学习 (SSL) - 掩码自编码器 (MAE) 风格的配置文件
-from typing import Optional
+from pathlib import Path
 
-# --- 数据集与路径配置 ---
-UNLABELED_JSON_NAME: str = "master_unlabeled_dataset.json"
+# --- 自监督学习 (SSL) 配置 ---
+# --- 编码器架构选择 ---
+ENCODER_NAME = "unet"
+MODEL_NAME = f"mae_{ENCODER_NAME}"
 
-# --- 检查点路径配置 ---
-# 训练完成后，最终的编码器权重保存路径
-SSL_ENCODER_FINAL_PATH: str = "models/checkpoints/ssl_finetuned_encoder.pth"
-
-# 用于保存损失最低的最佳编码器权重的文件名
-SSL_BEST_MODEL_CHECKPOINT_PATH: str = "models/checkpoints/ssl_best_loss_encoder.pth"
-
-# 用于断点续训的最新检查点文件名 (包含完整状态)
-SSL_RESUMABLE_CHECKPOINT_PATH: str = "models/checkpoints/ssl_latest_checkpoint.pth"
-
-# --- 恢复训练配置 ---
-# 指向一个可恢复的检查点文件路径。设为 None 或 "" 则从头开始训练。
-RESUME_FROM_CHECKPOINT: Optional[str] = "models/checkpoints/ssl_latest_checkpoint.pth"
-
+# --- 数据集 ---
+JSON_DIR_NAME = "json"
+UNLABELED_JSON_NAME = "master_unlabeled_dataset.json"
 
 # --- 训练超参数 ---
-MODEL_NAME: str = "MAE_UNetEncoder"
-BATCH_SIZE: int = 16
-LEARNING_RATE: float = 5e-4
-WEIGHT_DECAY: float = 0.05
-NUM_EPOCHS: int = 10000    
-NUM_WORKERS: int = 4
+NUM_EPOCHS = 5000
+BATCH_SIZE = 16
+LEARNING_RATE = 1e-4
+WEIGHT_DECAY = 1e-5
+NUM_WORKERS = 4
 
-# --- 最佳模型保存频率 ---
-SAVE_BEST_CHECK_EVERY_N_EPOCHS: int = 10
+# --- MAE 特定参数 ---
+PATCH_SIZE = 16
+MASK_RATIO = 0.75
+DECODER_EMBED_DIM = 512
+DECODER_DEPTH = 4
 
+# --- 断点续训配置 (统一逻辑) ---
+RESUME_FROM_CHECKPOINT = True
 
-# --- MAE (掩码自编码器) 特定参数 ---
-PATCH_SIZE: int = 16
-MASK_RATIO: float = 0.08
+# **关键修正**: 动态构建检查点目录
+CHECKPOINT_DIR_NAME = f"ssl_pretrained_{ENCODER_NAME}"
+SSL_CHECKPOINT_DIR = Path(f"models/checkpoints/{CHECKPOINT_DIR_NAME}")
+RESUMABLE_CHECKPOINT_PATH = SSL_CHECKPOINT_DIR / "resumable_checkpoint.pth"
+BEST_MODEL_CHECKPOINT_PATH = SSL_CHECKPOINT_DIR / "best_ssl_encoder.pth"
+SSL_ENCODER_FINAL_PATH = SSL_CHECKPOINT_DIR / "ssl_encoder_final.pth"
 
-# --- 解码器参数 ---
-DECODER_EMBED_DIM: int = 256
-DECODER_DEPTH: int = 4
-
-# --- 日志记录与可视化 ---
-LOG_DIR_NAME: str = "ssl_pretraining"
-VISUALIZE_EVERY_N_EPOCHS: int = 10 
-VISUALIZATION_DIR: str = "logs/ssl_visualizations"
+SAVE_BEST_CHECK_EVERY_N_EPOCHS = 10

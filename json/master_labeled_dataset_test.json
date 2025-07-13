@@ -3,25 +3,43 @@
     "description": "Test split.",
     "root_raw_image_dir": "data/raw",
     "input_depth": 3,
-    "num_samples": 3,
+    "num_samples": 7,
     "samples": [
         {
-            "sample_id": "4.4V_4.4V-013_centerFrameIdx0013",
+            "sample_id": "LPSCl_LPSCl-017_centerFrameIdx0017",
             "frames": [
-                "4.4V-012.png",
-                "4.4V-013.png",
-                "4.4V-013.png"
+                "LPSCl-016.png",
+                "LPSCl-017.png",
+                "LPSCl-018.png"
             ],
-            "mask_file": "4.4V-013.png"
+            "mask_file": "LPSCl-017.png"
         },
         {
-            "sample_id": "4.2V_4.2V-014_centerFrameIdx0014",
+            "sample_id": "LPSCl_LPSCl-036_centerFrameIdx0036",
             "frames": [
-                "4.2V-013.png",
-                "4.2V-014.png",
-                "4.2V-015.png"
+                "LPSCl-035.png",
+                "LPSCl-036.png",
+                "LPSCl-037.png"
             ],
-            "mask_file": "4.2V-014.png"
+            "mask_file": "LPSCl-036.png"
+        },
+        {
+            "sample_id": "4.2V_4.2V-013_centerFrameIdx0013",
+            "frames": [
+                "4.2V-012.png",
+                "4.2V-013.png",
+                "4.2V-014.png"
+            ],
+            "mask_file": "4.2V-013.png"
+        },
+        {
+            "sample_id": "4.4V_4.4V-010_centerFrameIdx0010",
+            "frames": [
+                "4.4V-009.png",
+                "4.4V-010.png",
+                "4.4V-011.png"
+            ],
+            "mask_file": "4.4V-010.png"
         },
         {
             "sample_id": "pristine_pristine-010_centerFrameIdx0010",
@@ -31,6 +49,24 @@
                 "pristine-010.png"
             ],
             "mask_file": "pristine-010.png"
+        },
+        {
+            "sample_id": "LPSCl_LPSCl-014_centerFrameIdx0014",
+            "frames": [
+                "LPSCl-013.png",
+                "LPSCl-014.png",
+                "LPSCl-015.png"
+            ],
+            "mask_file": "LPSCl-014.png"
+        },
+        {
+            "sample_id": "LPSCl_LPSCl-016_centerFrameIdx0016",
+            "frames": [
+                "LPSCl-015.png",
+                "LPSCl-016.png",
+                "LPSCl-017.png"
+            ],
+            "mask_file": "LPSCl-016.png"
         }
     ],
     "root_labeled_mask_dir": "data/labeled"

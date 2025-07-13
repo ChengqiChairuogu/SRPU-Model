@@ -1,45 +1,94 @@
-# --- 归一化时使用的像素值范围最大值 ---
-MAX_PIXEL_VALUE = 255.0 
+# self_segmentation/configs/augmentation_config.py
+# 在这里配置训练和验证时使用的数据增强策略
 
-# --- 目标图像尺寸 (用于Resize或Crop) ---
-from .base import IMAGE_HEIGHT,IMAGE_WIDTH
-TARGET_HEIGHT = IMAGE_HEIGHT
-TARGET_WIDTH = IMAGE_WIDTH
+# --- 通用设置 ---
+# 裁剪的目标尺寸，将从 base.py 中自动读取，无需在此设置
+# CROP_HEIGHT = 512
+# CROP_WIDTH = 512
 
-# --- 训练集数据增强参数 ---
-TRAIN_AUGMENTATIONS_PARAMS = {
-    "RandomResizedCrop": {
-        "height": TARGET_HEIGHT, "width": TARGET_WIDTH,
-        "scale": (0.7, 1.0), "ratio": (0.75, 1.33),
-        "interpolation": 1, "p": 0.6
+# ==============================================================================
+#                      训练集 (TRAIN) 数据增强配置
+# ==============================================================================
+# 将 'enabled' 设置为 True 或 False 来开启或关闭对应的增强功能
+
+TRAIN_AUGMENTATIONS = {
+    # --- 裁剪 ---
+    "random_crop": {
+        "enabled": True,  # 始终对训练集启用随机裁剪以匹配目标尺寸
     },
-    "ResizeWhenNeeded": { # 这是一个逻辑名称，我们会在build_augmentations中处理
-        "height": TARGET_HEIGHT, "width": TARGET_WIDTH, "interpolation": 1
+
+    # --- 几何变换 ---
+    "horizontal_flip": {
+        "enabled": True,
+        "p": 0.5,  # 应用此变换的概率
     },
-    "HorizontalFlip": {"p": 0.5},
-    "VerticalFlip": {"p": 0.5},
-    "RandomRotate90": {"p": 0.5},
-    "ShiftScaleRotate": {
-        "p": 0.4, "shift_limit": 0.07, "scale_limit": 0.15,
-        "rotate_limit": 35, "interpolation": 1,
-        "border_mode": 0, "value": 0, "mask_value": 0
-    },
-    "OneOf_Color_Pixel": {
+    "vertical_flip": {
+        "enabled": True,
         "p": 0.5,
-        "transforms": [
-            {"type": "RandomBrightnessContrast", "brightness_limit":0.25, "contrast_limit":0.25, "p":1.0},
-            {"type": "HueSaturationValue", "hue_shift_limit":10, "sat_shift_limit":15, "val_shift_limit":10, "p":1.0}
-        ]
     },
-    "GaussNoise": {"var_limit": (10.0, 50.0), "p": 0.2},
-    # Normalize 和 ToTensorV2 将由 build_augmentations 自动添加
+    "random_rotate_90": {
+        "enabled": True,
+        "p": 0.5,
+    },
+    "rotate": {
+        "enabled": False, # 更自由的旋转，可能会引入黑色边框，慎用
+        "p": 0.5,
+        "limit": (-30, 30), # 旋转角度范围
+        "border_mode": "constant", # 填充边框的模式
+        "value": 0, # 填充值
+    },
+
+    # --- 颜色和噪声 ---
+    "random_brightness_contrast": {
+        "enabled": False,
+        "p": 0.5,
+        "brightness_limit": 0.2,
+        "contrast_limit": 0.2,
+    },
+    "gaussian_blur": {
+        "enabled": False,
+        "p": 0.3,
+        "blur_limit": (3, 7), # 模糊核的大小范围
+    },
+    "gauss_noise": {
+        "enabled": False,
+        "p": 0.3,
+        "var_limit": (10.0, 50.0), # 噪声方差范围
+    },
 }
 
-# --- 验证/测试集数据转换参数 ---
-VAL_TRANSFORMS_PARAMS = {
-    "Resize": {
-        "height": TARGET_HEIGHT, "width": TARGET_WIDTH,
-        "interpolation": 1, "always_apply": True
+
+# ==============================================================================
+#                   验证集/测试集 (VAL/TEST) 数据增强配置
+# ==============================================================================
+# 通常验证集只做必要的尺寸匹配（如中心裁剪），不做随机性增强
+
+VAL_AUGMENTATIONS = {
+    "center_crop": {
+        "enabled": True, # 始终对验证集启用中心裁剪以匹配目标尺寸
+    }
+}
+
+
+# ==============================================================================
+#                    自监督学习 (SSL) 数据增强配置
+# ==============================================================================
+# SSL通常使用与监督学习相似但可能更强的几何增强
+
+SSL_AUGMENTATIONS = {
+    "random_crop": {
+        "enabled": True,
     },
-    # Normalize 和 ToTensorV2 将由 build_augmentations 自动添加
+    "horizontal_flip": {
+        "enabled": True,
+        "p": 0.5,
+    },
+    "vertical_flip": {
+        "enabled": True,
+        "p": 0.5,
+    },
+    "random_rotate_90": {
+        "enabled": True,
+        "p": 0.5,
+    },
 }

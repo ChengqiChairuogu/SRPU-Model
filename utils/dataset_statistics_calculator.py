@@ -1,186 +1,138 @@
 import torch
-from torch.utils.data import DataLoader
-from pathlib import Path
-import sys
+from torch.utils.data import Dataset, DataLoader
 import numpy as np
 import json
-import os # os.cpu_count()
+from pathlib import Path
+from PIL import Image
+from tqdm import tqdm
+import sys
+from typing import Tuple, List
 
+# --- 配置导入 ---
 try:
     from configs import base as cfg_base
     from configs import json_config as cfg_json_gen
-    from datasets.sem_datasets import SemSegmentationDataset # 您的Dataset类
+    from configs.train import train_config as cfg_train
 except ImportError:
     if __name__ == '__main__' and __package__ is None:
         current_script_path = Path(__file__).resolve()
-        project_root_for_config = current_script_path.parent.parent
-        if not (project_root_for_config / "configs").is_dir():
-            project_root_for_config = current_script_path.parent
-            if not (project_root_for_config / "configs").is_dir() and \
-               (project_root_for_config.parent / "configs").exists():
-                 project_root_for_config = project_root_for_config.parent
-
-        if project_root_for_config and str(project_root_for_config) not in sys.path:
-            sys.path.insert(0, str(project_root_for_config))
-        try:
-            from configs import base as cfg_base
-            from configs import json_config as cfg_json_gen
-            # Dataset类在datasets子目录下
-            datasets_module_path = project_root_for_config / "datasets"
-            if str(datasets_module_path) not in sys.path:
-                 sys.path.insert(0, str(datasets_module_path))
-            from datasets.sem_datasets import SemSegmentationDataset
-
-        except ImportError as e_inner:
-            print(f"Error: Could not import required modules: {e_inner}")
-            print(f"Attempted project root for config/datasets: {project_root_for_config}")
-            sys.exit(1)
+        project_root_for_import = current_script_path.parent.parent
+        if str(project_root_for_import) not in sys.path:
+            sys.path.insert(0, str(project_root_for_import))
+        from configs import base as cfg_base
+        from configs import json_config as cfg_json_gen
+        from configs.train import train_config as cfg_train
     else:
         raise
 
-def calculate_mean_std(dataset: torch.utils.data.Dataset,
-                       batch_size: int = 32,
-                       num_workers: int = 0) -> Tuple[Optional[List[float]], Optional[List[float]]]:
-    if len(dataset) == 0:
-        print("Dataset is empty, cannot calculate mean/std.")
-        return None, None
+# --- 为统计计算专门定义的简单数据集 ---
+class StatsCalculatorDataset(Dataset):
+    """
+    一个更简单、更正确的数据集，用于加载单张原始图像以计算统计数据。
+    它会创建一个包含数据集中所有独立图像帧路径的列表。
+    """
+    def __init__(self, json_file_path: Path, project_root: Path):
+        self.project_root = project_root.resolve()
+        
+        if not json_file_path.exists():
+            raise FileNotFoundError(f"数据集JSON文件未找到: {json_file_path}")
 
-    loader = DataLoader(dataset, batch_size=batch_size, num_workers=num_workers, shuffle=False)
+        with open(json_file_path, 'r') as f:
+            data_info = json.load(f)
 
-    channels = -1
-    for img_tensor_sample, _ in loader: # Try to get first valid batch
-        if isinstance(img_tensor_sample, torch.Tensor) and img_tensor_sample.numel() > 0:
-            channels = img_tensor_sample.shape[1] # (B, C, H, W)
-            break
-    if channels == -1:
-        print("Error: Could not determine channel count from dataset. Dataset might be empty or returning invalid samples.")
-        return None, None
+        self.raw_image_root = self.project_root / data_info["root_raw_image_dir"]
+        
+        # **核心修改**：创建一个包含所有独立帧路径的扁平列表
+        self.all_frames_paths = []
+        for sample in data_info.get("samples", []):
+            for frame_filename in sample.get("frames", []):
+                self.all_frames_paths.append(self.raw_image_root / frame_filename)
+        
+        # 去重，以防同一个文件在JSON中被多次引用
+        self.all_frames_paths = sorted(list(set(self.all_frames_paths)))
+        print(f"共找到 {len(self.all_frames_paths)} 张独立的图像文件用于统计。")
 
-    channel_sum = torch.zeros(channels)
-    channel_sum_sq = torch.zeros(channels)
-    num_pixels_total_per_channel = 0 # Accumulate total number of pixels (H*W) over all images
-    total_images_processed = 0
 
-    print(f"Calculating mean and std over {len(dataset)} samples using {channels} channel(s)...")
-    for i, (images_batch, _) in enumerate(loader): # Dataset returns (image, mask)
-        if not isinstance(images_batch, torch.Tensor) or images_batch.numel() == 0:
-            print(f"Warning: Skipping empty or invalid batch {i}")
-            continue
+    def __len__(self) -> int:
+        # 长度是所有独立帧的总数
+        return len(self.all_frames_paths)
 
-        if images_batch.max() > 1.01 or images_batch.min() < -0.01: # 允许微小误差
-            print(f"Warning: Batch {i} image values seem not to be in [0,1] range "
-                  f"(min: {images_batch.min():.2f}, max: {images_batch.max():.2f}). "
-                  "Mean/std calculation might be incorrect if ToTensor() scaling was missed or done differently in Dataset.")
+    def __getitem__(self, idx: int) -> torch.Tensor:
+        # 每次只加载和处理一张图片
+        image_path = self.all_frames_paths[idx]
+        
+        with Image.open(image_path) as img:
+            img = img.convert('L')
+            # 统一尺寸，这仍然是必要的，因为原始文件分辨率可能不同
+            target_size = (cfg_base.IMAGE_WIDTH, cfg_base.IMAGE_HEIGHT)
+            img = img.resize(target_size, Image.Resampling.BILINEAR)
+            
+            img_np = np.array(img, dtype=np.float32) / 255.0
+        
+        # 返回单张图片的张量，形状为 (1, H, W)
+        return torch.from_numpy(img_np).unsqueeze(0)
 
-        channel_sum += torch.sum(images_batch, dim=[0, 2, 3])
-        channel_sum_sq += torch.sum(images_batch ** 2, dim=[0, 2, 3])
 
-        num_pixels_in_batch_per_channel = images_batch.size(0) * images_batch.size(2) * images_batch.size(3)
-        num_pixels_total_per_channel += num_pixels_in_batch_per_channel
-        total_images_processed += images_batch.size(0)
+def calculate_mean_std(dataloader: DataLoader) -> Tuple[List[float], List[float]]:
+    """
+    遍历数据加载器以计算均值和标准差。
+    现在它处理的是单通道图像。
+    """
+    channels_sum, channels_squared_sum, num_batches = 0, 0, 0
+    
+    for images in tqdm(dataloader, desc="Calculating Stats"):
+        # images 的形状是 (B, 1, H, W)
+        channels_sum += torch.mean(images) # 直接对整个批次求均值
+        channels_squared_sum += torch.mean(images**2)
+        num_batches += 1
+        
+    mean = channels_sum / num_batches
+    std = (channels_squared_sum / num_batches - mean**2)**0.5
+    
+    # 因为是单通道灰度图，所以均值和标准差都只有一个值
+    # 但我们的配置和归一化步骤期望一个列表，所以我们用这个值来构建一个列表
+    final_mean = [mean.item()] * cfg_base.INPUT_DEPTH
+    final_std = [std.item()] * cfg_base.INPUT_DEPTH
+    
+    return final_mean, final_std
 
-        if (i + 1) % (max(1, len(loader) // 10)) == 0: # Print progress roughly 10 times
-            print(f"  Processed batch {i+1}/{len(loader)} ({total_images_processed} images)...")
-
-    if total_images_processed == 0 or num_pixels_total_per_channel == 0:
-        print("No valid samples or pixels processed, cannot calculate mean/std.")
-        return None, None
-
-    mean = channel_sum / num_pixels_total_per_channel
-    # Variance = E[X^2] - (E[X])^2
-    variance = (channel_sum_sq / num_pixels_total_per_channel) - (mean ** 2)
-    std = torch.sqrt(variance)
-
-    std[torch.isnan(std)] = 0
-    std[std < 1e-6] = 1e-6 # 避免标准差过小导致后续除以零的问题，设定一个小的下限
-
-    mean_list = mean.tolist()
-    std_list = std.tolist()
-    print(f"\nCalculation complete.")
-    print(f"Processed {total_images_processed} images in total.")
-    print(f"Calculated mean: {mean_list}")
-    print(f"Calculated std: {std_list}")
-    return mean_list, std_list
-
-if __name__ == '__main__':
-    print("--- Calculating Dataset Mean and Standard Deviation ---")
-
+# --- 主执行函数 ---
+def main():
+    print("--- 正在计算数据集的均值和标准差 (单图像模式) ---")
     project_root = cfg_base.PROJECT_ROOT.resolve()
-    json_dir_abs = project_root / cfg_json_gen.JSON_OUTPUT_DIR_NAME
-
-    train_json_filename_for_stats = getattr(cfg_json_gen, 'STATS_CALCULATION_JSON', "master_labeled_dataset_train.json")
-
-    potential_stats_json_path = json_dir_abs / train_json_filename_for_stats
-    if not potential_stats_json_path.exists():
-        print(f"Specified stats JSON '{train_json_filename_for_stats}' not found.")
-        master_labeled_path = json_dir_abs / "master_labeled_dataset.json"
-        if master_labeled_path.exists():
-            print(f"Attempting to use '{master_labeled_path.name}' instead for statistics.")
-            stats_json_path = master_labeled_path
-            train_json_filename_for_stats = master_labeled_path.name # 更新用于日志的文件名
-        else:
-            print(f"Error: Neither '{train_json_filename_for_stats}' nor 'master_labeled_dataset.json' "
-                  f"found in '{json_dir_abs}'.")
-            print("Please run json_generator.py first to create the dataset JSON file(s).")
-            sys.exit(1)
-    else:
-        stats_json_path = potential_stats_json_path
-
-
-    print(f"Using JSON file for statistics: {stats_json_path}")
+    json_dir = project_root / cfg_json_gen.JSON_OUTPUT_DIR_NAME
+    json_for_stats_path = json_dir / cfg_train.TRAIN_JSON_NAME
+    print(f"使用JSON文件进行统计: {json_for_stats_path}")
 
     try:
-        stats_calc_dataset = SemSegmentationDataset(
-            json_file_identifier=str(train_json_filename_for_stats), # 传递文件名
-            project_root=project_root,
-            input_depth_from_config=cfg_json_gen.INPUT_DEPTH,
-            class_mapping_from_config=cfg_base.MAPPING,
-            json_dir_name_relative_to_project=cfg_json_gen.JSON_OUTPUT_DIR_NAME,
-            image_transform=None, # Dataset内部会做基本的ToTensor和[0,1]缩放
-            augmentations=None    # 不进行随机增强
+        stats_calc_dataset = StatsCalculatorDataset(
+            json_file_path=json_for_stats_path,
+            project_root=project_root
         )
-    except FileNotFoundError as e:
-        print(f"Error during Dataset instantiation for statistics: {e}")
-        print("Ensure the JSON file and the image/mask paths it references are correct.")
-        sys.exit(1)
     except Exception as e:
-        print(f"An unexpected error occurred during Dataset instantiation: {e}")
-        import traceback
-        traceback.print_exc()
-        sys.exit(1)
+        print(f"数据集实例化过程中发生意外错误: {e}")
+        return
 
+    dataloader = DataLoader(stats_calc_dataset, batch_size=32, shuffle=False, num_workers=4)
+    
+    mean, std = calculate_mean_std(dataloader)
 
-    if len(stats_calc_dataset) > 0:
-        # 确定num_workers，可以稍微保守一些以避免内存问题
-        available_cpus = os.cpu_count()
-        num_workers = min(available_cpus // 2 if available_cpus else 2, 4)
-        print(f"Using {num_workers} workers for DataLoader.")
+    print("\n--- 计算完成 ---")
+    print(f"计算出的单通道均值 (Mean): {mean[0]}")
+    print(f"计算出的单通道标准差 (Std Dev): {std[0]}")
+    print(f"扩展到 {cfg_base.INPUT_DEPTH} 个通道后的均值: {mean}")
+    print(f"扩展到 {cfg_base.INPUT_DEPTH} 个通道后的标准差: {std}")
 
-        calculated_mean, calculated_std = calculate_mean_std(
-            stats_calc_dataset,
-            batch_size=getattr(cfg_json_gen, 'STATS_CALC_BATCH_SIZE', 16), # 可在json_config中配置
-            num_workers=num_workers
-        )
+    stats_dict = {
+        "mean": mean,
+        "std": std,
+        "input_depth_at_calculation": cfg_base.INPUT_DEPTH,
+        "source_json": str(json_for_stats_path.name)
+    }
+    output_stats_file = json_dir / "dataset_stats.json"
+    with open(output_stats_file, 'w') as f:
+        json.dump(stats_dict, f, indent=4)
+    print(f"\n统计数据已保存至: {output_stats_file}")
 
-        if calculated_mean is not None and calculated_std is not None:
-            # 将统计量保存到文件，供 augmentations_utils.py 读取
-            stats_output_file = json_dir_abs / "dataset_stats.json" # 固定文件名
-            stats_data_to_save = {
-                "mean": calculated_mean,
-                "std": calculated_std,
-                "source_json": str(train_json_filename_for_stats), # 记录来源
-                "input_depth_at_calculation": cfg_json_gen.INPUT_DEPTH # 记录计算时的深度
-            }
-            with open(stats_output_file, 'w') as f:
-                json.dump(stats_data_to_save, f, indent=4)
-            print(f"\nDataset statistics (mean, std) saved to: {stats_output_file}")
-            print("You can now use these values for normalization in your training pipeline.")
-            print("`utils/augmentations_utils.py` will attempt to load this file automatically.")
-            print("\n--- Example for configs/base.py (if you want to hardcode them as well) ---")
-            print(f"IMG_MEAN = {calculated_mean}")
-            print(f"IMG_STD = {calculated_std}")
-            print("---------------------------------------------------------------------------")
-        else:
-            print("Failed to calculate dataset statistics.")
-    else:
-        print(f"The dataset loaded from '{train_json_filename_for_stats}' is empty. Cannot calculate statistics.")
+if __name__ == '__main__':
+    main()

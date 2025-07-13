@@ -18,5 +18,6 @@ dependencies:
   - matplotlib
   - pip
   - pip:
-      - tensorboard
+      - albumentations
       - tqdm
+      - wandb  

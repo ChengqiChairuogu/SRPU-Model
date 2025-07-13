@@ -8,7 +8,6 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = PROJECT_ROOT / "data"
 RAW_DATA_DIR = DATA_DIR / "raw"          # 存放所有原始 .tif 图像 
 LABELED_DATA_DIR = DATA_DIR / "labeled"    # 存放已标注的图像和掩码 
-UNLABELED_DATA_DIR = DATA_DIR / "unlabeled"  # 存放未标注图像的目录 
 JSON_DIR = PROJECT_ROOT / "json"             # 存放数据集索引的json文件
 CHECKPOINT_DIR = PROJECT_ROOT / "models" / "checkpoints" # 存放模型权重
 
@@ -22,7 +21,7 @@ INPUT_DEPTH = 3
 
 # --- 3. 模型与类别配置 (Model and Class Configuration) ---
 # 分割的类别数量，对应你U-Net中的 n_classes 
-NUM_CLASSES = 4
+NUM_CLASSES = 3
 
 # U-Net解码器上采样时是否使用双线性插值 
 BILINEAR = True
