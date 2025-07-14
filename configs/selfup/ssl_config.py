@@ -24,9 +24,9 @@ DECODER_EMBED_DIM = 512
 DECODER_DEPTH = 4
 
 # --- 断点续训配置 (统一逻辑) ---
-RESUME_FROM_CHECKPOINT = True
+RESUME_FROM_CHECKPOINT = False
 
-# **关键修正**: 动态构建检查点目录
+# --- 动态构建检查点目录 ---
 CHECKPOINT_DIR_NAME = f"ssl_pretrained_{ENCODER_NAME}"
 SSL_CHECKPOINT_DIR = Path(f"models/checkpoints/{CHECKPOINT_DIR_NAME}")
 RESUMABLE_CHECKPOINT_PATH = SSL_CHECKPOINT_DIR / "resumable_checkpoint.pth"
