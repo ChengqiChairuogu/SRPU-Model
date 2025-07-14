@@ -22,9 +22,9 @@ OPTIMIZER = "AdamW"
 LOSS_FUNCTION = "DiceBCELoss"
 
 # --- 断点续训配置 (统一逻辑) ---
-RESUME_FROM_CHECKPOINT = True
+RESUME_FROM_CHECKPOINT = False
 
-# **关键修正**: 动态构建检查点目录，包含模型名称
+# --- 动态构建检查点目录，包含模型名称 ---
 CHECKPOINT_DIR_NAME = f"{TASK_NAME}_{ENCODER_NAME}_{DECODER_NAME}"
 CHECKPOINT_DIR = Path(f"models/checkpoints/{CHECKPOINT_DIR_NAME}")
 RESUMABLE_CHECKPOINT_PATH = CHECKPOINT_DIR / "resumable_checkpoint.pth"
