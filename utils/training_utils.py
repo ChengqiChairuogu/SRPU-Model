@@ -4,42 +4,45 @@ import torch.nn.functional as F
 from tqdm import tqdm
 
 # ==============================================================================
-#                      修正后的损失函数
+#                      修正后的多类别损失函数
 # ==============================================================================
-class DiceBCELoss(nn.Module):
+class DiceCELoss(nn.Module):
     """
-    一个更健壮的Dice-BCE损失函数，用于多分类语义分割。
-    它现在可以自动处理模型输出和目标尺寸不匹配的问题。
+    专为多类别语义分割设计的 Dice + CrossEntropy 复合损失函数。
     """
-    def __init__(self, weight=None, size_average=True):
-        super(DiceBCELoss, self).__init__()
+    def __init__(self, weight=None, size_average=True, a=0.5, b=0.5):
+        super(DiceCELoss, self).__init__()
+        self.a = a  # CrossEntropy Loss 的权重
+        self.b = b  # Dice Loss 的权重
 
     def forward(self, logits, targets, smooth=1e-6):
-        # **关键修正**: 检查并统一空间尺寸
-        # 如果模型输出(logits)和真值掩码(targets)的尺寸不匹配
+        # 确保 logits 和 targets 的尺寸匹配
         if logits.shape[-2:] != targets.shape[-2:]:
-            # 使用双线性插值将logits的尺寸调整为和targets一致
             logits = F.interpolate(logits, size=targets.shape[-2:], mode='bilinear', align_corners=False)
 
-        # 1. 计算 BCE Loss
-        bce_loss = F.binary_cross_entropy_with_logits(logits, targets, reduction='mean')
+        # 1. 计算 CrossEntropy Loss
+        # CrossEntropyLoss 期望的 logits 形状: (N, C, H, W)
+        # 期望的 targets 形状: (N, H, W)，值为类别索引
+        ce_loss = F.cross_entropy(logits, targets, reduction='mean')
 
         # 2. 计算 Dice Loss
-        probs = F.sigmoid(logits)
-        probs_flat = probs.view(-1)
-        targets_flat = targets.view(-1)
-        
-        intersection = (probs_flat * targets_flat).sum()
-        dice_score = (2. * intersection + smooth) / (probs_flat.sum() + targets_flat.sum() + smooth)
-        dice_loss = 1 - dice_score
-        
+        # 首先将 logits 转换为概率分布
+        probs = F.softmax(logits, dim=1)
+        # 将 targets (N, H, W) 转换为 one-hot 编码 (N, C, H, W)
+        targets_one_hot = F.one_hot(targets, num_classes=logits.shape[1]).permute(0, 3, 1, 2).float()
+
+        intersection = torch.sum(probs * targets_one_hot, dim=(2, 3))
+        cardinality = torch.sum(probs + targets_one_hot, dim=(2, 3))
+
+        dice_score = (2. * intersection + smooth) / (cardinality + smooth)
+        dice_loss = 1 - dice_score.mean()
+
         # 3. 组合损失
-        combined_loss = bce_loss + dice_loss
-        
+        combined_loss = self.a * ce_loss + self.b * dice_loss
         return combined_loss
 
 # ==============================================================================
-#                      训练和验证工具函数
+#                      训练和验证工具函数 (保持不变)
 # ==============================================================================
 
 def train_one_epoch(model, dataloader, optimizer, criterion, device):
@@ -50,12 +53,11 @@ def train_one_epoch(model, dataloader, optimizer, criterion, device):
 
     for images, masks in progress_bar:
         images = images.to(device)
-        masks = masks.to(device)
+        masks = masks.to(device) # masks 形状应为 (N, H, W)
 
         optimizer.zero_grad()
         
         outputs = model(images)
-        # 现在criterion内部会自动处理尺寸不匹配的问题
         loss = criterion(outputs, masks)
         
         loss.backward()
@@ -80,22 +82,27 @@ def validate_one_epoch(model, dataloader, criterion, device):
             masks = masks.to(device)
 
             outputs = model(images)
-            # criterion内部会自动处理尺寸不匹配
             loss = criterion(outputs, masks)
             total_loss += loss.item()
 
             # 计算 Dice 分数用于评估
-            probs = F.sigmoid(outputs)
+            probs = F.softmax(outputs, dim=1)
+            pred_labels = torch.argmax(probs, dim=1)
             
-            # **关键修正**: 在计算评估指标时，也要确保尺寸一致
-            if probs.shape[-2:] != masks.shape[-2:]:
-                probs = F.interpolate(probs, size=masks.shape[-2:], mode='bilinear', align_corners=False)
-
-            intersection = (probs.view(-1) * masks.view(-1)).sum()
-            dice_score = (2. * intersection) / (probs.view(-1).sum() + masks.view(-1).sum() + 1e-6)
-            total_dice += dice_score.item()
+            # 计算多类别的平均 Dice Score
+            dice_per_class = []
+            for i in range(outputs.shape[1]): # 遍历每个类别
+                pred_i = (pred_labels == i)
+                target_i = (masks == i)
+                intersection = (pred_i * target_i).sum()
+                union = pred_i.sum() + target_i.sum()
+                dice = (2. * intersection) / (union + 1e-6)
+                dice_per_class.append(dice.item())
             
-            progress_bar.set_postfix(loss=loss.item(), dice=dice_score.item())
+            avg_dice_score = np.mean(dice_per_class)
+            total_dice += avg_dice_score
+            
+            progress_bar.set_postfix(loss=loss.item(), dice=avg_dice_score)
 
     avg_loss = total_loss / len(dataloader)
     avg_dice = total_dice / len(dataloader)
