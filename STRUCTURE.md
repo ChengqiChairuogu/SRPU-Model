@@ -84,8 +84,9 @@ SRPU-Model/
 │   ├── logger.py                        # 日志系统适配（wandb/tensorboard），自动管理日志目录和run name
 │   └── training_utils.py                # 训练通用工具（损失函数、评估、训练循环等）
 │
-├── tensorboard/                 # tensorboard日志目录（如使用本地tensorboard）
-├── wandb/                       # wandb 离线日志目录
+├── runs/                        # 日志主目录（下分 tensorboard/ 和 wandb/）
+│   ├── tensorboard/             # tensorboard日志（每次实验自动新建子目录）
+│   └── wandb/                   # wandb日志（每次实验自动新建子目录）
 ├── environment.yml              # Conda 环境依赖文件
 ├── pipeline.py                  # （预留）统一调度多阶段流程的主入口
 ├── README.md                    # 项目说明文档

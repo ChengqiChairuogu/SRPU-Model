@@ -17,8 +17,9 @@ SRPU-Model/
 ├── models/          # 模型结构与权重
 ├── tasks/           # 各类训练/推理/评估脚本
 ├── utils/           # 工具函数与脚本
-├── tensorboard/     # tensorboard日志（如使用本地tensorboard）
-├── wandb/           # wandb离线日志
+├── runs/            # 日志主目录（下分 tensorboard/ 和 wandb/）
+│   ├── tensorboard/ # tensorboard日志（每次实验自动新建子目录）
+│   └── wandb/       # wandb日志（每次实验自动新建子目录）
 ├── environment.yml  # Conda环境依赖
 ├── README.md        # 项目说明
 └── STRUCTURE.md     # 结构说明
@@ -135,17 +136,17 @@ python utils/json_generator.py --mode generate_all
   LOGGER = "wandb"  # 可选 "wandb" 或 "tensorboard"
   ```
 
-- 日志目录会自动根据 logger 类型和任务名、时间戳有序化，如：
-  - `runs/tensorboard/sem_segmentation_from_scratch_20240608_153012`
-  - `runs/wandb/sem_segmentation_finetuned_from_ssl_20240608_153012`
-  - `runs/tensorboard/multistage_finetune_unet_unet_20240608_153012`
+- **日志目录结构已标准化为：**
+  - `runs/tensorboard/任务名_时间戳`  （如 tensorboard 日志）
+  - `runs/wandb/任务名_时间戳`        （如 wandb 日志）
+  - 每次实验会自动在 runs/tensorboard 或 runs/wandb 下新建唯一子目录，便于管理和查找。
 
 ### 日志查看
 - **Wandb**：支持在线/离线模式，详见 [wandb 官网](https://wandb.ai/)。
 - **Tensorboard**：如选择 tensorboard，运行：
 
   ```bash
-  tensorboard --logdir ./runs
+  tensorboard --logdir runs/tensorboard
   ```
 
   浏览 http://localhost:6006 查看训练曲线。
