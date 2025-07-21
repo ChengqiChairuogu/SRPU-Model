@@ -21,62 +21,42 @@ class DoubleConv(nn.Module):
     def forward(self, x):
         return self.double_conv(x)
 
+class Down(nn.Module):
+    """Downscaling with maxpool then double conv"""
 
-class UNetEncoder(nn.Module):
-    def __init__(self, in_channels=3, base_c=64):
-        """
-        初始化经典的U-Net编码器。
-        
-        参数:
-        - in_channels (int): 输入图像的通道数。
-        - base_c (int): U-Net第一层的通道数，后续层会基于此进行扩展。
-        """
+    def __init__(self, in_channels, out_channels):
         super().__init__()
-        self.in_channels = in_channels
-        self.base_c = base_c
-        
-        # 定义编码器的各个阶段
-        self.inc = DoubleConv(in_channels, base_c)
-        self.down1 = DoubleConv(base_c, base_c * 2)
-        self.down2 = DoubleConv(base_c * 2, base_c * 4)
-        self.down3 = DoubleConv(base_c * 4, base_c * 8)
-        self.down4 = DoubleConv(base_c * 8, base_c * 16)
-        
-        # 定义下采样（池化）层
-        self.pool = nn.MaxPool2d(2)
-
-    def get_channels(self):
-        """返回每个阶段输出的通道数，用于解码器配置"""
-        return [self.base_c, self.base_c * 2, self.base_c * 4, self.base_c * 8, self.base_c * 16]
+        self.maxpool_conv = nn.Sequential(
+            nn.MaxPool2d(2),
+            DoubleConv(in_channels, out_channels)
+        )
 
     def forward(self, x):
-        """
-        前向传播，返回一个包含各阶段特征图的列表，用于跳跃连接。
-        """
-        features = []
-        
-        # Stage 0
+        return self.maxpool_conv(x)
+
+class UNetEncoder(nn.Module):
+    def __init__(self, n_channels, bilinear=False):
+        super(UNetEncoder, self).__init__()
+        self.n_channels = n_channels
+        self.bilinear = bilinear
+
+        self.inc = DoubleConv(n_channels, 64)
+        self.down1 = Down(64, 128)
+        self.down2 = Down(128, 256)
+        self.down3 = Down(256, 512)
+        self.down4 = Down(512, 1024)
+        factor = 2 if bilinear else 1
+        self.down5 = Down(1024, 2048 // factor)
+    
+    def forward(self, x):
         x1 = self.inc(x)
-        features.append(x1)
-        
-        # Stage 1
-        x2 = self.pool(x1)
-        x2 = self.down1(x2)
-        features.append(x2)
-        
-        # Stage 2
-        x3 = self.pool(x2)
-        x3 = self.down2(x3)
-        features.append(x3)
-        
-        # Stage 3
-        x4 = self.pool(x3)
-        x4 = self.down3(x4)
-        features.append(x4)
-        
-        # Stage 4 (最深层)
-        x5 = self.pool(x4)
-        x5 = self.down4(x5)
-        features.append(x5)
-        
-        return features
+        x2 = self.down1(x1)
+        x3 = self.down2(x2)
+        x4 = self.down3(x3)
+        x5 = self.down4(x4)
+        x6 = self.down5(x5)
+        return [x1, x2, x3, x4, x5, x6]
+    
+    def get_channels(self):
+        factor = 2 if self.bilinear else 1
+        return [64, 128, 256, 512, 1024, 2048 // factor]

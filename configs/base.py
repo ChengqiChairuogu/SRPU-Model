@@ -21,19 +21,18 @@ INPUT_DEPTH = 3
 
 # --- 3. 模型与类别配置 (Model and Class Configuration) ---
 # 分割的类别数量，对应你U-Net中的 n_classes 
-NUM_CLASSES = 3
+NUM_CLASSES = 3  # 只分AM、SE、carbon三类
 
 # U-Net解码器上采样时是否使用双线性插值 
 BILINEAR = True
 
 
 MAPPING = {
-	(126, 126, 255): 0, #AM
-	(255, 255, 0): 1, #SE
-	(0, 255, 0): 2, #carbon
-	(255, 0, 0): 3 #void
+    (0,   0, 255): 0,   # carbon
+    (0, 255, 255): 1,   # SE
+    (255,126,126): 2    # AM
 }
-COLORS = [(126, 126, 255), (255, 255, 0), (0, 255, 0), (255, 0, 0)]
+NUM_CLASSES = 3
 
 # --- 4. JSON文件命名 (JSON Filename Configuration) ---
 TRAIN_JSON_FILENAME = "train_dataset.json"
@@ -41,3 +40,6 @@ VALID_JSON_FILENAME = "valid_dataset.json"
 TEST_JSON_FILENAME = "test_dataset.json"
 MASTER_UNLABELED_JSON_FILENAME = "master_unlabeled_dataset.json"
 MASTER_LABELED_JSON_FILENAME = "master_labeled_dataset.json"
+
+# --- 5. 工具与日志配置 (Tools and Logging Configuration) ---
+WANDB_ENABLED = True  # 设置为 True 启用, 设置为 False 禁用

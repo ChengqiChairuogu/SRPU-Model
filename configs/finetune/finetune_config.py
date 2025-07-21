@@ -13,11 +13,14 @@ DECODER_NAME = "unet"
 PRETRAINED_ENCODER_PATH = Path(f"models/checkpoints/ssl_pretrained_{ENCODER_NAME}/best_ssl_encoder.pth")
 
 # --- 数据集 ---
-TRAIN_JSON_NAME = "master_labeled_dataset_train.json"
-VAL_JSON_NAME = "master_labeled_dataset_val.json"
+TRAIN_JSON_NAME = "master_labeled_dataset.json"
+VAL_JSON_NAME = "master_labeled_dataset.json"
 
 # --- 微调策略 ---
-FINETUNE_MODE = 'finetune_differential'  #'finetune_frozen', 'finetune_differential'
+# FINETUNE_MODE 可选值：
+#   'finetune_frozen'：只训练解码器，编码器参数全部冻结（适合迁移学习初期或数据量少时）
+#   'finetune_differential'：编码器和解码器都训练，但编码器使用较小学习率（推荐，适合大多数场景）
+FINETUNE_MODE = 'finetune_differential'
 
 # --- 训练超参数 ---
 NUM_EPOCHS = 5000
@@ -26,13 +29,23 @@ BASE_LEARNING_RATE = 1e-4
 ENCODER_LEARNING_RATE = 1e-5
 WEIGHT_DECAY = 1e-5
 OPTIMIZER = "AdamW"
-LOSS_FUNCTION = "DiceBCELoss"
+LOSS_FUNCTION = "DiceCELoss"
+SEED = 42  # 全局随机种子，确保分层采样的一致性
 
 # --- 断点续训配置 (统一逻辑) ---
 RESUME_FROM_CHECKPOINT = True
 
-# --- 动态构建检查点目录，包含模型名称 ---
+# **关键修正**: 动态构建检查点目录，包含模型名称
 CHECKPOINT_DIR_NAME = f"{TASK_NAME}_{ENCODER_NAME}_{DECODER_NAME}"
 CHECKPOINT_DIR = Path(f"models/checkpoints/{CHECKPOINT_DIR_NAME}")
 RESUMABLE_CHECKPOINT_PATH = CHECKPOINT_DIR / "resumable_checkpoint.pth"
 BEST_MODEL_CHECKPOINT_PATH = CHECKPOINT_DIR / "best_model.pth"
+
+# --- 日志记录配置 ---
+LOGGER = "wandb"  # 可选 "wandb" 或 "tensorboard"
+log_dir = f"runs/{LOGGER}/{TASK_NAME}"
+log_config = {
+    "logger": LOGGER,
+    "project": "SRPU-Model",
+    "log_dir": log_dir
+}

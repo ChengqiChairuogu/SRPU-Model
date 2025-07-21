@@ -244,9 +244,9 @@ def main(args: argparse.Namespace):
     image_extensions = args.img_ext if args.img_ext else cfg_json.EXPECTED_IMAGE_EXTENSIONS
     mask_extensions = args.mask_ext if args.mask_ext else cfg_json.EXPECTED_MASK_EXTENSIONS
     
-    val_split_ratio = args.val_split if args.val_split is not None else cfg_json.DEFAULT_VAL_SPLIT
-    test_split_ratio = args.test_split if args.test_split is not None else cfg_json.DEFAULT_TEST_SPLIT
-    random_seed = args.seed if args.seed is not None else cfg_json.DEFAULT_RANDOM_SEED
+    val_split_ratio = args.val_split if args.val_split is not None else 0.1
+    test_split_ratio = args.test_split if args.test_split is not None else 0.1
+    random_seed = args.seed if args.seed is not None else 42
 
     filename_pattern_compiled = re.compile(filename_pattern_str, re.IGNORECASE)
     JSON_OUTPUT_DIR_ABSOLUTE_FROM_CONFIG.mkdir(parents=True, exist_ok=True)
@@ -373,33 +373,156 @@ def main(args: argparse.Namespace):
         print(f"Unknown or unprocessed mode: {args.mode}. Please choose from 'generate_all', 'generate_labeled_unlabeled', 'split_labeled'.")
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Generate and manage JSON dataset files for SEM image segmentation.",
-        formatter_class=argparse.RawTextHelpFormatter 
-    )
-    parser.add_argument(
-        "--mode", type=str, default="generate_all",
-        choices=["generate_all", "generate_labeled_unlabeled", "split_labeled"],
-        help="Operation mode:\n"
-             "'generate_all': Scan raw/labeled, create master JSONs, then split labeled into train/val/test.\n"
-             "'generate_labeled_unlabeled': Scan raw/labeled and create master_labeled_dataset.json and master_unlabeled_dataset.json.\n"
-             "'split_labeled': Split an existing labeled JSON into train/val/test sets."
-    )
-    parser.add_argument(
-        "--input_json", type=str,
-        help=("Filename of an existing labeled JSON (it will be looked for in the directory "
-              "specified by JSON_OUTPUT_DIR_NAME in configs/json_config.py). "
-              "Required for 'split_labeled' mode.")
-    )
-    parser.add_argument("--val_split", type=float, default=None, help="Validation split ratio (overrides config, e.g., 0.15).")
-    parser.add_argument("--test_split", type=float, default=None, help="Test split ratio (overrides config, e.g., 0.15).")
-    parser.add_argument("--seed", type=int, default=None, help="Random seed for splitting (overrides config).")
-    
-    parser.add_argument("--depth", type=int, default=None, help="Input depth for 3D sequences (overrides config from configs.json_config).")
-    parser.add_argument("--pattern", type=str, default=None, help="Regex pattern for filenames (overrides config from configs.json_config).")
-    parser.add_argument("--img_ext", nargs='+', default=None, help="Image extensions (overrides config, e.g., .tif .png).")
-    parser.add_argument("--mask_ext", nargs='+', default=None, help="Mask extensions (overrides config, e.g., .png).")
-    
-    args = parser.parse_args()
-    main(args)
+def parse_args():
+    parser = argparse.ArgumentParser(description="Generate dataset JSON from raw images and masks.")
+    parser.add_argument('--raw_dir', type=str, required=True, help='Path to raw images directory')
+    parser.add_argument('--mask_dir', type=str, required=True, help='Path to masks directory')
+    parser.add_argument('--dataset_name', type=str, required=True, help='Dataset name (e.g. dataset1_LInCl)')
+    parser.add_argument('--output_json', type=str, required=True, help='Output JSON file path')
+    parser.add_argument('--input_depth', type=int, default=1, help='Number of frames per sample (default: 1)')
+    return parser.parse_args()
+
+
+def generate_json_from_raw_and_mask(raw_dir, mask_dir, dataset_name, output_json, input_depth=1):
+    raw_dir = Path(raw_dir)
+    mask_dir = Path(mask_dir)
+    samples = []
+    all_images = sorted([p for p in raw_dir.iterdir() if p.is_file() and p.suffix.lower() in ['.png', '.jpg', '.jpeg', '.tif', '.tiff']])
+    for img_path in all_images:
+        mask_path = mask_dir / img_path.name
+        if mask_path.exists():
+            sample = {
+                "dataset": dataset_name,
+                "frames": [img_path.name],
+                "mask_file": mask_path.name
+            }
+            samples.append(sample)
+    # 组装json结构
+    json_dict = {
+        "samples": samples,
+        "root_raw_image_dir": str(raw_dir),
+        "root_labeled_mask_dir": str(mask_dir)
+    }
+    with open(output_json, 'w') as f:
+        json.dump(json_dict, f, indent=2)
+    print(f"生成 {len(samples)} 个样本，已保存到 {output_json}")
+
+
+def auto_generate_all_datasets_json():
+    datasets_root = Path('datasets')
+    output_root = Path('json')
+    output_root.mkdir(exist_ok=True)
+    all_labeled_samples = []
+    all_ssl_samples = []
+    for ds_dir in datasets_root.iterdir():
+        if ds_dir.is_dir() and ds_dir.name.startswith('dataset'):
+            raw_dir = ds_dir / 'raw_images'
+            mask_dir = ds_dir / 'masks_3class'
+            dataset_name = ds_dir.name
+            # 有监督json（只用raw_images和masks_3class配对）
+            if raw_dir.exists() and mask_dir.exists():
+                output_json = output_root / f'{dataset_name}.json'
+                samples = []
+                raw_images = sorted([p for p in raw_dir.iterdir() if p.is_file() and p.suffix.lower() in ['.png', '.jpg', '.jpeg', '.tif', '.tiff']])
+                mask_files = set(p.name for p in mask_dir.iterdir() if p.is_file() and p.suffix.lower() in ['.png', '.jpg', '.jpeg', '.tif', '.tiff'])
+                for img_path in raw_images:
+                    if img_path.name in mask_files:
+                        sample = {
+                            'dataset': dataset_name,
+                            'frames': [img_path.name],
+                            'mask_file': img_path.name
+                        }
+                        samples.append(sample)
+                        all_labeled_samples.append({
+                            'dataset': dataset_name,
+                            'frames': [str(ds_dir / 'raw_images' / img_path.name)],
+                            'mask_file': str(ds_dir / 'masks_3class' / img_path.name)
+                        })
+                json_dict = {
+                    'samples': samples,
+                    'dataset_name': dataset_name,
+                    'root_raw_image_dir': str(raw_dir),
+                    'root_labeled_mask_dir': str(mask_dir),
+                    'description': f'{dataset_name} 有监督分割图片全集',
+                    'num_samples': len(samples)
+                }
+                with open(output_json, 'w') as f:
+                    json.dump(json_dict, f, indent=2, ensure_ascii=False)
+                print(f'自动生成有监督json: {output_json}，共{len(samples)}张图片')
+            # 自监督json（遍历raw_images）
+            if raw_dir.exists():
+                ssl_output_json = output_root / f'{dataset_name}_ssl.json'
+                ssl_samples = []
+                for img_path in sorted(raw_dir.iterdir()):
+                    if img_path.is_file() and img_path.suffix.lower() in ['.png', '.jpg', '.jpeg', '.tif', '.tiff']:
+                        ssl_samples.append({
+                            'dataset': dataset_name,
+                            'image_file': img_path.name
+                        })
+                        all_ssl_samples.append({
+                            'dataset': dataset_name,
+                            'image_file': str(ds_dir / 'raw_images' / img_path.name)
+                        })
+                ssl_json_dict = {
+                    'samples': ssl_samples,
+                    'dataset_name': dataset_name,
+                    'root_raw_image_dir': str(raw_dir),
+                    'description': f'{dataset_name} 自监督预训练图片全集',
+                    'num_samples': len(ssl_samples)
+                }
+                with open(ssl_output_json, 'w') as f:
+                    json.dump(ssl_json_dict, f, indent=2, ensure_ascii=False)
+                print(f'自动生成自监督json: {ssl_output_json}，共{len(ssl_samples)}张图片')
+    # 合并所有有监督样本
+    # 1. 统计每个数据集的根目录
+    datasets_info = {}
+    for ds_dir in datasets_root.iterdir():
+        if ds_dir.is_dir() and ds_dir.name.startswith('dataset'):
+            dataset_name = ds_dir.name
+            raw_dir = ds_dir / 'raw_images'
+            mask_dir = ds_dir / 'masks_3class'
+            datasets_info[dataset_name] = {
+                'raw_image_root': str(raw_dir),
+                'mask_root': str(mask_dir)
+            }
+    # 2. 重新整理samples为相对路径
+    relabeled_samples = []
+    for sample in all_labeled_samples:
+        dataset = sample['dataset']
+        # 只保留相对于各自根目录的相对路径
+        rel_frames = [Path(f).relative_to(datasets_info[dataset]['raw_image_root']).as_posix() for f in sample['frames']]
+        rel_mask = Path(sample['mask_file']).relative_to(datasets_info[dataset]['mask_root']).as_posix()
+        relabeled_samples.append({
+            'dataset': dataset,
+            'frames': rel_frames,
+            'mask_file': rel_mask
+        })
+    master_labeled_json = output_root / 'master_labeled_dataset.json'
+    with open(master_labeled_json, 'w') as f:
+        json.dump({
+            'samples': relabeled_samples,
+            'datasets_info': datasets_info,
+            'root_raw_image_dir': '',
+            'root_labeled_mask_dir': '',
+            'description': '所有数据集合并的有监督分割训练样本',
+            'num_samples': len(relabeled_samples)
+        }, f, indent=2, ensure_ascii=False)
+    print(f'已生成所有有监督样本合并json: {master_labeled_json}，共{len(relabeled_samples)}张图片')
+    # 合并所有自监督样本
+    master_ssl_json = output_root / 'master_ssl_dataset.json'
+    with open(master_ssl_json, 'w') as f:
+        json.dump({
+            'samples': all_ssl_samples,
+            'datasets_info': {k: v['raw_image_root'] for k, v in datasets_info.items()},
+            'description': '所有数据集合并的自监督预训练样本',
+            'num_samples': len(all_ssl_samples)
+        }, f, indent=2, ensure_ascii=False)
+    print(f'已生成所有自监督样本合并json: {master_ssl_json}，共{len(all_ssl_samples)}张图片')
+
+if __name__ == '__main__':
+    # 如果没有传入参数，则自动批量处理所有datasets下的dataset*/images和masks_3class
+    if len(sys.argv) == 1:
+        auto_generate_all_datasets_json()
+    else:
+        args = parse_args()
+        generate_json_from_raw_and_mask(args.raw_dir, args.mask_dir, args.dataset_name, args.output_json, args.input_depth)

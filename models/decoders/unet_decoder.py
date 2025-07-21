@@ -21,7 +21,7 @@ class DecoderBlock(nn.Module):
         return self.conv(x)
 
 class UNetDecoder(nn.Module):
-    def __init__(self, encoder_channels, num_classes):
+    def __init__(self, encoder_channels, n_classes):
         """
         参数:
         - encoder_channels (list): 编码器输出的各阶段特征图的通道数，从浅到深。
@@ -29,8 +29,8 @@ class UNetDecoder(nn.Module):
         """
         super().__init__()
         reversed_encoder_channels = list(reversed(encoder_channels))
-        decoder_channels = [1024, 512, 256, 128] # 可调
-        
+        # 新的解码通道数，适配6层更深更宽
+        decoder_channels = [2048, 1024, 512, 256, 128]
         self.decoder_blocks = nn.ModuleList([
             DecoderBlock(reversed_encoder_channels[1], reversed_encoder_channels[0], decoder_channels[0])
         ])
@@ -38,9 +38,8 @@ class UNetDecoder(nn.Module):
             self.decoder_blocks.append(
                 DecoderBlock(reversed_encoder_channels[i+1], decoder_channels[i-1], decoder_channels[i])
             )
-            
         self.final_upsample = nn.ConvTranspose2d(decoder_channels[-1], decoder_channels[-1] // 2, kernel_size=2, stride=2)
-        self.final_conv = nn.Conv2d(decoder_channels[-1] // 2, num_classes, kernel_size=1)
+        self.final_conv = nn.Conv2d(decoder_channels[-1] // 2, n_classes, kernel_size=1)
 
     def forward(self, features):
         features = list(reversed(features))

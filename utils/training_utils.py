@@ -2,109 +2,269 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from tqdm import tqdm
+import numpy as np
+from collections import defaultdict
+import torchvision
+from torchvision import models
+from torchvision.transforms import Normalize
+from skimage.metrics import structural_similarity as skimage_ssim
 
-# ==============================================================================
-#                      修正后的多类别损失函数
-# ==============================================================================
+# --- 手动实现的损失函数 ---
+class DiceLoss(nn.Module):
+    def __init__(self, include_background=True, to_onehot_y=False, softmax=False, other_act=None, squared_pred=False, jaccard=False):
+        super().__init__()
+        self.include_background = include_background
+        self.to_onehot_y = to_onehot_y
+        self.softmax = softmax
+        self.other_act = other_act
+        self.squared_pred = squared_pred
+        self.jaccard = jaccard
+
+    def forward(self, input, target):
+        if self.softmax:
+            input = F.softmax(input, dim=1)
+        if self.other_act:
+            input = self.other_act(input)
+        if self.to_onehot_y:
+            target = F.one_hot(target, num_classes=input.shape[1]).permute(0, 3, 1, 2)
+        
+        if not self.include_background:
+            input = input[:, 1:]
+            target = target[:, 1:]
+
+        assert input.shape == target.shape, "input and target dimensions must match"
+        
+        reduce_axis = list(range(2, len(input.shape)))
+        intersection = torch.sum(input * target, dim=reduce_axis)
+        
+        if self.squared_pred:
+            ground_o = torch.sum(input**2, dim=reduce_axis)
+            ground_g = torch.sum(target**2, dim=reduce_axis)
+        else:
+            ground_o = torch.sum(input, dim=reduce_axis)
+            ground_g = torch.sum(target, dim=reduce_axis)
+            
+        denominator = ground_o + ground_g
+        
+        if self.jaccard:
+            denominator = 2.0 * denominator - intersection
+
+        f = (2.0 * intersection) / (denominator + 1e-6)
+        return 1.0 - f.mean()
+
 class DiceCELoss(nn.Module):
-    """
-    专为多类别语义分割设计的 Dice + CrossEntropy 复合损失函数。
-    """
-    def __init__(self, weight=None, size_average=True, a=0.5, b=0.5):
-        super(DiceCELoss, self).__init__()
-        self.a = a  # CrossEntropy Loss 的权重
-        self.b = b  # Dice Loss 的权重
+    def __init__(self, lambda_dice=1.0, lambda_ce=1.0):
+        super().__init__()
+        self.dice_loss = DiceLoss(softmax=True, to_onehot_y=True)
+        self.ce_loss = nn.CrossEntropyLoss()
+        self.lambda_dice = lambda_dice
+        self.lambda_ce = lambda_ce
 
-    def forward(self, logits, targets, smooth=1e-6):
-        # 确保 logits 和 targets 的尺寸匹配
-        if logits.shape[-2:] != targets.shape[-2:]:
-            logits = F.interpolate(logits, size=targets.shape[-2:], mode='bilinear', align_corners=False)
+    def forward(self, pred, target):
+        # 确保模型输出和标签的空间维度一致
+        if pred.shape[-2:] != target.shape[-2:]:
+            pred = F.interpolate(pred, size=target.shape[-2:], mode='bilinear', align_corners=False)
+        return self.lambda_dice * self.dice_loss(pred, target) + self.lambda_ce * self.ce_loss(pred, target)
 
-        # 1. 计算 CrossEntropy Loss
-        # CrossEntropyLoss 期望的 logits 形状: (N, C, H, W)
-        # 期望的 targets 形状: (N, H, W)，值为类别索引
-        ce_loss = F.cross_entropy(logits, targets, reduction='mean')
+class DiceBCELoss(nn.Module):
+    def __init__(self, lambda_dice=1.0, lambda_bce=1.0):
+        super().__init__()
+        self.dice_loss = DiceLoss(softmax=True, to_onehot_y=True)
+        self.bce_loss = nn.BCEWithLogitsLoss()
+        self.lambda_dice = lambda_dice
+        self.lambda_bce = lambda_bce
 
-        # 2. 计算 Dice Loss
-        # 首先将 logits 转换为概率分布
-        probs = F.softmax(logits, dim=1)
-        # 将 targets (N, H, W) 转换为 one-hot 编码 (N, C, H, W)
-        targets_one_hot = F.one_hot(targets, num_classes=logits.shape[1]).permute(0, 3, 1, 2).float()
+    def forward(self, pred, target):
+        # 确保模型输出和标签的空间维度一致
+        if pred.shape[-2:] != target.shape[-2:]:
+            pred = F.interpolate(pred, size=target.shape[-2:], mode='bilinear', align_corners=False)
+        dice_l = self.dice_loss(pred, target)
+        target_one_hot = F.one_hot(target, num_classes=pred.shape[1]).permute(0, 3, 1, 2).float()
+        bce_l = self.bce_loss(pred, target_one_hot)
+        return self.lambda_dice * dice_l + self.lambda_bce * bce_l
 
-        intersection = torch.sum(probs * targets_one_hot, dim=(2, 3))
-        cardinality = torch.sum(probs + targets_one_hot, dim=(2, 3))
+class SSIMLoss(nn.Module):
+    def __init__(self, window_size=11):
+        super().__init__()
+        self.window_size = window_size
+    def forward(self, pred, target):
+        # pred/target: (B, 1, H, W), 归一化到[0,1]
+        ssim_vals = []
+        pred_np = pred.detach().cpu().numpy()
+        target_np = target.detach().cpu().numpy()
+        for i in range(pred.shape[0]):
+            ssim_val = skimage_ssim(
+                np.squeeze(pred_np[i]), np.squeeze(target_np[i]),
+                data_range=1.0, win_size=self.window_size
+            )
+            ssim_vals.append(ssim_val)
+        return 1.0 - torch.tensor(ssim_vals, dtype=pred.dtype, device=pred.device).mean()
 
-        dice_score = (2. * intersection + smooth) / (cardinality + smooth)
-        dice_loss = 1 - dice_score.mean()
+class VGGPerceptualLoss(nn.Module):
+    def __init__(self, resize=True):
+        super().__init__()
+        vgg = models.vgg16(pretrained=True).features[:16].eval()
+        for param in vgg.parameters():
+            param.requires_grad = False
+        self.vgg = vgg
+        self.resize = resize
+        self.norm = Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    def forward(self, pred, target):
+        device = pred.device  # 保证VGG和输入在同一设备
+        self.vgg = self.vgg.to(device)
+        # pred/target: (B, 1, H, W) or (B, H, W)
+        if pred.dim() == 3:
+            pred = pred.unsqueeze(1)
+        if target.dim() == 3:
+            target = target.unsqueeze(1)
+        pred_rgb = pred.repeat(1, 3, 1, 1)
+        target_rgb = target.repeat(1, 3, 1, 1)
+        if self.resize:
+            pred_rgb = F.interpolate(pred_rgb, size=(224, 224), mode='bilinear', align_corners=False)
+            target_rgb = F.interpolate(target_rgb, size=(224, 224), mode='bilinear', align_corners=False)
+        pred_rgb = self.norm(pred_rgb)
+        target_rgb = self.norm(target_rgb)
+        feat_pred = self.vgg(pred_rgb)
+        feat_target = self.vgg(target_rgb)
+        return F.l1_loss(feat_pred, feat_target)
 
-        # 3. 组合损失
-        combined_loss = self.a * ce_loss + self.b * dice_loss
-        return combined_loss
+# --- 损失函数注册表 ---
+LOSS_FUNCTIONS = {
+    "DiceCELoss": DiceCELoss,
+    "DiceBCELoss": DiceBCELoss,
+    "CrossEntropyLoss": nn.CrossEntropyLoss,
+}
 
-# ==============================================================================
-#                      训练和验证工具函数 (保持不变)
-# ==============================================================================
+def get_loss_function(name: str) -> nn.Module:
+    if name not in LOSS_FUNCTIONS:
+        raise ValueError(f"不支持的loss function: {name}，可选: {list(LOSS_FUNCTIONS.keys())}")
+    return LOSS_FUNCTIONS[name]()
 
 def train_one_epoch(model, dataloader, optimizer, criterion, device):
-    """训练模型一个 epoch。"""
     model.train()
-    total_loss = 0.0
+    total_loss = 0
     progress_bar = tqdm(dataloader, desc="Training", leave=False)
-
     for images, masks in progress_bar:
         images = images.to(device)
-        masks = masks.to(device) # masks 形状应为 (N, H, W)
-
+        masks = masks.to(device)
         optimizer.zero_grad()
-        
         outputs = model(images)
         loss = criterion(outputs, masks)
-        
         loss.backward()
         optimizer.step()
-        
         total_loss += loss.item()
-        progress_bar.set_postfix(loss=loss.item())
+        progress_bar.set_postfix({'loss': f'{loss.item():.4f}'})
+    avg_loss = total_loss / len(dataloader)
+    return avg_loss
 
-    return total_loss / len(dataloader)
+def dice_score(preds: torch.Tensor, targets: torch.Tensor, num_classes: int) -> torch.Tensor:
+    """
+    计算每个类别的Dice系数
+    Args:
+        preds: 预测结果 (B, H, W)
+        targets: 真实标签 (B, H, W)
+        num_classes: 类别数量
+    Returns:
+        每个类别的Dice系数 (num_classes,)
+    """
+    if preds.shape != targets.shape:
+        # 调整预测结果的尺寸以匹配目标
+        preds = torch.nn.functional.interpolate(
+            preds.unsqueeze(1).float(),
+            size=targets.shape[1:],
+            mode='nearest'
+        ).squeeze(1).long()
+    
+    dice_scores = []
+    for i in range(num_classes):
+        pred_class = (preds == i)
+        target_class = (targets == i)
+        intersection = (pred_class & target_class).sum().float()
+        union = pred_class.sum() + target_class.sum()
+        if union == 0:
+            dice_scores.append(torch.tensor(1.0, device=preds.device))  # 如果该类别不存在，则dice=1
+        else:
+            dice = (2.0 * intersection) / (union + 1e-6)  # 添加小量防止除零
+            dice_scores.append(dice)
+    return torch.stack(dice_scores)
 
-
-def validate_one_epoch(model, dataloader, criterion, device):
-    """在验证集上评估模型一个 epoch。"""
+def evaluate_model(model, dataloader, device, num_classes):
+    """
+    在验证集上评估模型
+    Args:
+        model: 模型
+        dataloader: 数据加载器
+        device: 设备
+        num_classes: 类别数量
+    Returns:
+        评估结果字典
+    """
     model.eval()
-    total_loss = 0.0
-    total_dice = 0.0
-    progress_bar = tqdm(dataloader, desc="Validating", leave=False)
-
+    total_dice_scores = []
+    dataset_dice_scores = {}  # 按数据集分组的dice scores
+    
     with torch.no_grad():
-        for images, masks in progress_bar:
+        for batch in tqdm(dataloader, desc="Evaluating"):
+            if len(batch) == 3:  # 如果返回了数据集名称
+                images, masks, dataset_names = batch
+            else:
+                images, masks = batch
+                dataset_names = None
+            
             images = images.to(device)
             masks = masks.to(device)
-
+            
             outputs = model(images)
-            loss = criterion(outputs, masks)
-            total_loss += loss.item()
-
-            # 计算 Dice 分数用于评估
-            probs = F.softmax(outputs, dim=1)
-            pred_labels = torch.argmax(probs, dim=1)
+            preds = torch.argmax(outputs, dim=1)
             
-            # 计算多类别的平均 Dice Score
-            dice_per_class = []
-            for i in range(outputs.shape[1]): # 遍历每个类别
-                pred_i = (pred_labels == i)
-                target_i = (masks == i)
-                intersection = (pred_i * target_i).sum()
-                union = pred_i.sum() + target_i.sum()
-                dice = (2. * intersection) / (union + 1e-6)
-                dice_per_class.append(dice.item())
+            # 计算整体的dice scores
+            batch_dice_scores = dice_score(preds, masks, num_classes)
+            total_dice_scores.append(batch_dice_scores)
             
-            avg_dice_score = np.mean(dice_per_class)
-            total_dice += avg_dice_score
-            
-            progress_bar.set_postfix(loss=loss.item(), dice=avg_dice_score)
-
-    avg_loss = total_loss / len(dataloader)
-    avg_dice = total_dice / len(dataloader)
+            # 如果有数据集名称，按数据集分组计算
+            if dataset_names is not None:
+                for i, dataset_name in enumerate(dataset_names):
+                    if dataset_name not in dataset_dice_scores:
+                        dataset_dice_scores[dataset_name] = []
+                    single_pred = preds[i].unsqueeze(0)
+                    single_mask = masks[i].unsqueeze(0)
+                    single_dice_score = dice_score(single_pred, single_mask, num_classes)
+                    dataset_dice_scores[dataset_name].append(single_dice_score)
     
-    return avg_loss, avg_dice
+    # 计算平均值
+    mean_dice_scores = torch.stack(total_dice_scores).mean(dim=0)
+    
+    results = {
+        'mean_dice_scores': mean_dice_scores.cpu().numpy(),
+        'class_names': ['carbon', 'SE', 'AM'],  # 与MAPPING注释一致
+        'dataset_scores': {}
+    }
+    
+    # 计算每个数据集的平均分数
+    if dataset_dice_scores:
+        for dataset_name, scores in dataset_dice_scores.items():
+            dataset_mean = torch.stack(scores).mean(dim=0)
+            results['dataset_scores'][dataset_name] = dataset_mean.cpu().numpy()
+    
+    return results
+
+def pretty_print_metrics(results: dict):
+    print("\n--- Evaluation Results ---")
+    # 打印整体指标
+    mean_dice_scores = results['mean_dice_scores']
+    class_names = results['class_names']
+    print(f"\n[Overall Metrics]")
+    for class_name, dice_score in zip(class_names, mean_dice_scores):
+        print(f"  - {class_name}: {dice_score:.4f}")
+    overall_mean_dice = mean_dice_scores.mean()
+    print(f"  - 平均Dice: {overall_mean_dice:.4f}")
+    # 打印按数据集分组的指标
+    if results['dataset_scores']:
+        print(f"\n[Per-Dataset Metrics]")
+        for dataset_name, dataset_scores in results['dataset_scores'].items():
+            print(f"  - Dataset: {dataset_name}")
+            for class_name, dice_score in zip(class_names, dataset_scores):
+                print(f"    - {class_name}: {dice_score:.4f}")
+            dataset_mean = dataset_scores.mean()
+            print(f"    - 平均Dice: {dataset_mean:.4f}")
+    print("\n--------------------------\n")

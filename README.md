@@ -1,162 +1,239 @@
-# SRPU-Model: A Self-Evolving Framework for SEM Image Segmentation
+# SRPU-Model 项目说明
 
-## 1\. Project Overview
+## 项目简介
 
-`SRPU-Model` is an advanced project for Scanning Electron Microscope (SEM) image segmentation. It aims to build a sustainable, self-optimizing intelligent segmentation system by combining Supervised Learning, Self-Supervised Learning, Semi-Supervised Learning, and Active Learning strategies. The core philosophy of this project is to leverage a limited amount of labeled data along with a vast pool of unlabeled data to progressively enhance the model's performance, ultimately creating a "living" system capable of continuous learning and evolution from new data.
+SRPU-Model 是一个面向扫描电镜（SEM）图像分割的自进化深度学习平台，集成了**监督学习**、**自监督学习**、**半监督学习**和**主动学习**等多种策略，目标是用有限标注数据和大量无标注数据，持续提升分割模型性能，实现“自我成长”的智能分割系统。
 
-The project adopts a modular architecture that clearly separates data processing, model definitions, task execution, and configuration management, making it easy to extend and maintain.
+---
 
-## 2\. Project Goals
-
-The long-term goal of this project is to construct a closed-loop, self-evolving segmentation system, achieved through the following phases:
-
-**Preparation Phase:** Establish a solid project foundation, including environment setup, data preparation, and a reliable supervised learning baseline model.
-  **Phase 1: Learning General Visual Knowledge.** Utilize Self-Supervised Learning (SSL) to enable the model to learn underlying features from a large amount of unlabeled SEM images. This is augmented by leveraging external pre-trained models (e.g., ResNet, EfficientNet) for enhanced capabilities.
-  **Phase 2: Efficient Utilization of Data and Human Resources.** Employ Semi-Supervised Learning (pseudo-labeling) to extract knowledge from unlabeled data. This is combined with Active Learning strategies to intelligently select the most valuable samples for manual annotation, thereby maximizing annotation efficiency.
-  **Phase 3: Automation and Continuous Evolution.** Explore the use of generative models to create novel training data to fill knowledge gaps. The final objective is to build an automated MLOps pipeline that can handle monitoring, feedback, retraining, and deployment automatically.
-
-## 3\. Project Structure
-
-The project follows a clear, modular design with the following directory structure:
+## 目录结构与详细说明
 
 ```
 SRPU-Model/
-├── configs/                # Stores all configuration files
-│   ├── finetune/           # Configs for fine-tuning tasks
-│   ├── selfup/             # Configs for self-supervised learning tasks
-│   └── base.py             # Base shared configurations
-├── data/                   # Stores datasets
-│   ├── raw/                # All original SEM images
-│   └── labeled/            # Manually labeled images and masks
-├── datasets/               # PyTorch Dataset definition scripts
-├── json/                   # JSON index files for datasets
-├── logs/                   # Training logs (e.g., for TensorBoard)
-├── models/                 # Model definitions
-│   ├── checkpoints/        # Stores trained model weights
-│   ├── decoders/           # Decoder modules (U-Net, DeepLabV3+)
-│   └── encoders/           # Encoder modules (U-Net, ResNet, etc.)
-├── tasks/                  # Execution scripts for various learning tasks
-├── utils/                  # Utility scripts and helper functions
-├── environment.yml         # Conda environment dependency file
-└── README.md               # Project documentation
+├── configs/         # 配置文件（训练、微调、自监督、推理、多阶段等）
+├── data/            # 数据集（raw原图、labeled标注、inference推理等）
+├── datasets/        # PyTorch数据集定义及原始/掩码图片
+├── json/            # 数据集索引json文件
+├── models/          # 模型结构与权重
+├── tasks/           # 各类训练/推理/评估脚本
+├── utils/           # 工具函数与脚本
+├── tensorboard/     # tensorboard日志（如使用本地tensorboard）
+├── wandb/           # wandb离线日志
+├── environment.yml  # Conda环境依赖
+├── README.md        # 项目说明
+└── STRUCTURE.md     # 结构说明
 ```
 
-## 4\. Core Features and Implementation
+### configs/ 配置文件目录
+- **base.py**：全局基础配置，如路径、类别数、图像尺寸等。
+- **augmentation_config.py**：数据增强参数。
+- **dataset_config.py**：数据集划分比例、随机种子。
+- **json_config.py**：json索引生成相关配置。
+- **wandb_config.py**：wandb日志系统全局配置。
+- **finetune/**
+  - `finetune_config.py`：单阶段微调参数。
+  - `multistage_finetune_config.py`：多阶段微调参数。
+- **train/**
+  - `train_config.py`：单阶段有监督训练参数。
+  - `multistage_train_config.py`：多阶段有监督训练参数。
+- **selfup/**
+  - `ssl_config.py`：自监督预训练参数。
+  - `ssl_inspect_config.py`：自监督模型评估参数。
+- **inference/**
+  - `inference_config.py`：推理参数。
+  - `inspection_config.py`：推理结果分析参数。
 
-### 4.1 Data Processing Workflow
+### data/ 数据目录
+- **raw/**：原始未标注SEM图像，按实验/批次分类存放。
+- **labeled/**：已标注的图像及其掩码，文件名与raw一致。
+- **inference/**
+  - `input/`：待推理图片。
+  - `output/`：推理生成的分割掩码。
 
-1.  **Dataset Generation (`utils/json_generator.py`)**:
+### datasets/ 数据集定义
+- **dataset1_LInCl/**、**dataset2_LPSCl/**、**dataset3_LNOCl/**
+  - `raw_images/`：原始图片，按数据集分组。
+  - `masks_3class/`：三分类掩码，按数据集分组。
+- **sem_datasets.py**：主分割数据集类，支持多数据集联合、分层采样。
+- **ssl_dataset.py**：自监督/半监督任务专用数据集类。
+- **stratified_sampler.py**：分层采样器实现，保证各子数据集均衡采样。
 
-      * Automatically scans the `data/raw` and `data/labeled` directories.
-      * Parses sequence and frame numbers from filenames (e.g., `4.2V-001.png`).
-      * Constructs 3D stacked samples (`input_depth`) for images with temporal relationships.
-      * Generates `master_labeled_dataset.json` and `master_unlabeled_dataset.json` to index samples with and without masks, respectively.
-      * Supports automatic splitting of the labeled dataset into training, validation, and test sets.
+### json/ 数据集索引
+- 各种json文件（如`master_labeled_dataset.json`、`dataset1_LInCl.json`等）：记录所有样本的路径、标签、所属数据集等信息，供训练/推理脚本快速索引。
 
-2.  **Data Loading (`datasets/sem_datasets.py`)**:
+### models/ 模型结构与权重
+- **encoders/**
+  - `efficientnet_encoder.py`、`dinov2_encoder.py`等：不同主流编码器实现。
+- **decoders/**
+  - `unet_decoder.py`、`deeplab_decoder.py`等：不同主流解码器实现。
+- **segmentation_unet.py**：U-Net分割模型主结构。
+- **unet_autoencoder.py**：U-Net自编码器结构（自监督用）。
+- **mae_model.py**：MAE自监督模型结构。
+- **checkpoints/**
+  - `ssl_pretrained_unet/`等：各类模型的权重保存目录。
 
-      * The `SemSegmentationDataset` class loads images and masks based on the JSON files.
-      * Supports the conversion from RGB color masks to class indices based on the `MAPPING` in `configs/base.py`.
-      * Integrates the `albumentations` library for powerful data augmentation.
+### tasks/ 任务脚本
+- **train_task.py**：单阶段有监督训练主入口。
+- **finetune_task.py**：单阶段微调主入口。
+- **ssl_pretrain_task.py**：自监督预训练主入口。
+- **ssl_inspect_task.py**：自监督模型评估脚本。
+- **inference_task.py**：推理脚本，将input图片分割并输出掩码。
+- **inspect_validation_results.py**：验证集结果分析与可视化。
+- **multistage_train_task.py**：多阶段有监督训练主入口。
+- **multistage_finetune_task.py**：多阶段微调主入口。
 
-3.  **Data Augmentation & Normalization (`utils/augmentation.py`)**:
+### utils/ 工具函数
+- **augmentation.py**：数据增强实现。
+- **dataset_statistics_calculator.py**：统计数据集分布、类别比例。
+- **diagnose_image_sizes.py**：检查图片尺寸一致性。
+- **json_generator.py**：自动生成/更新json索引文件。
+- **logger.py**：日志系统适配（wandb/tensorboard），自动管理日志目录和run name。
+- **training_utils.py**：训练通用工具（损失函数、评估、训练循环等）。
 
-      * Provides configurable augmentation strategies for training and validation sets.
-      * The `dataset_statistics_calculator.py` script can automatically compute the mean and standard deviation of the training set for normalization.
+### 其它重要文件
+- **environment.yml**：Conda环境依赖说明。
+- **README.md**：项目说明文档。
+- **STRUCTURE.md**：代码结构和扩展说明。
+- **pipeline.py**：（预留）可用于统一调度多阶段流程的主入口。
 
-### 4.2 Model Architecture
+---
 
-  * **Encoders (`models/encoders/`)**:
+## 环境配置
 
-      * `unet_encoder.py`: A classic U-Net encoder structure.
-      * `resnet_encoder.py`: Supports ResNet34 and ResNet50 as encoders, with the ability to load ImageNet pre-trained weights.
-      * `efficientnet_encoder.py`: Supports EfficientNet as an encoder.
-      * `dinov2_encoder.py`: Supports DINOv2 as an encoder.
-
-  * **Decoders (`models/decoders/`)**:
-
-      * `unet_decoder.py`: A classic U-Net decoder, compatible with skip connections from the encoder.
-      * `deeplab_decoder.py`: A DeepLabV3+ decoder, featuring an Atrous Spatial Pyramid Pooling (ASPP) module.
-
-### 4.3 Training Tasks
-
-  * **Supervised Learning (`tasks/train_task.py`)**:
-      * Implements a complete supervised training pipeline.
-      * Supports various strategies, including training from scratch, fine-tuning with a frozen encoder, and fine-tuning with differential learning rates.
-      * Integrates with TensorBoard for visualizing the training process.
-      * Automatically saves the best model and the latest checkpoint, enabling resuming from a checkpoint.
-
-## 5\. Environment Setup
-
-You can set up your Conda environment using the `environment.yml` file.
+推荐使用 Conda 环境：
 
 ```bash
-# 1. Create the Conda environment from the environment.yml file
 conda env create -f environment.yml
-
-# 2. Activate the newly created environment
 conda activate SRPU-Model
 ```
 
-This environment includes all necessary dependencies to run the project, such as PyTorch, TorchVision, and OpenCV.
+---
 
-## 6\. Usage Guide
+## 数据准备
 
-### Step 1: Prepare Your Data
+1. 原始SEM图像放入 `data/raw/`
+2. 标注掩码放入 `data/labeled/`，文件名需与原图一致（仅扩展名不同）
 
-1.  Place all your original SEM images (e.g., `.png`, `.tif`) into the `data/raw/` directory.
-2.  Place your labeled mask images (PNG format is recommended) into the `data/labeled/` directory. **Please ensure that the filename of each mask matches the corresponding original image's filename (excluding the extension).**
+---
 
-### Step 2: Generate Dataset Indexes
+## 数据集索引生成
 
-Run the `json_generator.py` script to create and split your datasets.
+自动生成数据集json索引：
 
 ```bash
-# It is recommended to use the 'generate_all' mode, which automates all steps.
-# This will scan the data, create master_labeled/unlabeled.json, and then split the labeled set.
 python utils/json_generator.py --mode generate_all
-
-# You can also execute the steps individually:
-# python utils/json_generator.py --mode generate_labeled_unlabeled
-# python utils/json_generator.py --mode split_labeled --input_json master_labeled_dataset.json
 ```
 
-After execution, files like `master_labeled_dataset_train.json` and `master_labeled_dataset_val.json` will be generated in the `json/` directory.
+---
 
-### Step 3: Calculate Dataset Statistics (Optional but Recommended)
+## 日志系统与实验管理
 
-For better model performance, it is recommended to calculate the mean and standard deviation of your training set for normalization.
+### 日志系统选择
+- 在各类 config 文件（如 `configs/train/train_config.py`、`configs/finetune/finetune_config.py`、`configs/selfup/ssl_config.py`、多阶段config等）中通过 `LOGGER` 字段选择日志方式：
+
+  ```python
+  LOGGER = "wandb"  # 可选 "wandb" 或 "tensorboard"
+  ```
+
+- 日志目录会自动根据 logger 类型和任务名、时间戳有序化，如：
+  - `runs/tensorboard/sem_segmentation_from_scratch_20240608_153012`
+  - `runs/wandb/sem_segmentation_finetuned_from_ssl_20240608_153012`
+  - `runs/tensorboard/multistage_finetune_unet_unet_20240608_153012`
+
+### 日志查看
+- **Wandb**：支持在线/离线模式，详见 [wandb 官网](https://wandb.ai/)。
+- **Tensorboard**：如选择 tensorboard，运行：
+
+  ```bash
+  tensorboard --logdir ./runs
+  ```
+
+  浏览 http://localhost:6006 查看训练曲线。
+
+---
+
+## 训练与微调
+
+### 单阶段训练/微调/自监督
+- **监督训练**  
+  ```bash
+  python tasks/train_task.py
+  ```
+- **微调**  
+  ```bash
+  python tasks/finetune_task.py
+  ```
+- **自监督预训练**  
+  ```bash
+  python tasks/ssl_pretrain_task.py
+  ```
+
+### 多阶段训练/微调
+- **多阶段有监督训练**  
+  配置：`configs/train/multistage_train_config.py`  
+  运行：  
+  ```bash
+  python tasks/multistage_train_task.py
+  ```
+- **多阶段微调**  
+  配置：`configs/finetune/multistage_finetune_config.py`  
+  运行：  
+  ```bash
+  python tasks/multistage_finetune_task.py
+  ```
+- 多阶段流程支持每阶段自定义数据集、epoch、学习率、权重加载等，详见对应config文件注释。
+
+---
+
+## 推理
+
+将待分割图片放入 `data/inference/input/`，运行：
 
 ```bash
-python utils/dataset_statistics_calculator.py
+python tasks/inference_task.py
 ```
 
-This script will read `master_labeled_dataset_train.json`, compute the statistics, and save them to `json/dataset_stats.json`.
+分割结果会保存在 `data/inference/output/`。
 
-### Step 4: Configure and Start Training
+---
 
-1.  Open the `configs/finetune/train_config.py` file.
-2.  Modify the configuration according to your needs, for example:
-      * `TASK_NAME`: Give a unique name to your training session.
-      * `TRAINING_MODE`: Choose a training mode (for a first run, `finetune_differential` with a pre-trained weights path is recommended).
-      * Hyperparameters like `BATCH_SIZE`, `NUM_EPOCHS`, `BASE_LEARNING_RATE`.
-3.  Run the training task script.
+## 检查点与模型保存
 
-<!-- end list -->
+- 所有模型权重和断点都保存在 `models/checkpoints/` 下，最优模型为 `best_model.pth`。
+- 多阶段任务每阶段会自动保存独立的最佳模型。
+- 你可以通过 config 灵活指定保存路径。
 
-```bash
-python tasks/train_task.py
-```
+---
 
-During training, logs will be saved in the `logs/` directory, and model weights will be saved in `models/checkpoints/`. You can monitor the process using TensorBoard:
+## 高级特性
 
-```bash
-tensorboard --logdir logs
-```
+- 支持多种编码器（U-Net、ResNet、EfficientNet、DINOv2等）和解码器（U-Net、DeepLabV3+）
+- 支持断点续训、自动保存最优模型
+- 支持自监督预训练、半监督伪标签、主动学习等扩展
+- 支持多阶段训练/微调，灵活组合数据集与训练策略
+- 日志与实验目录自动有序化，便于大规模实验管理
 
-## 7\. Next Steps
+---
 
-Based on your project plan, the following features can be implemented progressively:
+## 贡献与扩展
 
-  **Self-Supervised Pre-training (`tasks/ssl_pretrain_task.py`)**: Pre-train the encoder on a large volume of unlabeled data**Semi-Supervised & Active Learning**: Develop pseudo-labeling and intelligent sampling strategies.
-  **Automation Pipeline (`pipeline.py`)**: Orchestrate the entire workflow to achieve a closed-loop, automated system.
+欢迎提交 issue 或 PR，或根据 `STRUCTURE.md` 了解如何扩展新模型、数据集或任务。
+
+---
+
+## 常见问题
+
+- **如何切换日志系统？**  
+  修改config中的`LOGGER`字段即可，无需改动主代码。
+- **如何自定义多阶段流程？**  
+  编辑`multistage_train_config.py`或`multistage_finetune_config.py`，按注释填写每阶段参数即可。
+- **如何复现某次实验？**  
+  日志目录和wandb run name均带有时间戳和任务名，便于查找和复现。
+
+---
+
+如需详细使用说明、参数解释或遇到问题，欢迎随时提问！
+
+---
+
+如果你有特殊硬件/平台需求、想集成新模型或有大规模实验需求，也欢迎联系开发者团队。

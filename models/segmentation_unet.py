@@ -1,26 +1,22 @@
-import torch
-import torch.nn as nn
-from typing import List
+from torch import nn
+from .encoders.unet_encoder import UNetEncoder
+from .decoders.unet_decoder import UNetDecoder
 
 class SegmentationUNet(nn.Module):
-    """
-    一个通用的分割模型容器。
-    它将一个编码器和一个解码器组合成一个端到端的模型。
-    """
-    def __init__(self, encoder: nn.Module, decoder: nn.Module):
+    def __init__(self, encoder_name: str, decoder_name: str, n_channels: int = 3, n_classes: int = 3):
         super().__init__()
-        self.encoder = encoder
-        self.decoder = decoder
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """
-        定义数据的前向传播路径：输入 -> 编码器 -> 解码器 -> 输出。
-        """
-        # 编码器提取特征，通常返回一个包含多个层级特征的列表
+        if encoder_name != 'unet' or decoder_name != 'unet':
+            raise ValueError("Currently, only 'unet' encoder and 'unet' decoder are supported.")
+
+        self.encoder = UNetEncoder(n_channels=n_channels)
+
+        # 自动检测encoder输出通道数，保证与自监督结构一致
+        encoder_channels = self.encoder.get_channels()
+
+        self.decoder = UNetDecoder(encoder_channels=encoder_channels, n_classes=n_classes)
+
+    def forward(self, x):
         encoder_features = self.encoder(x)
-        
-        # 解码器利用这些特征来生成最终的分割图
-        # 解码器内部会处理如何使用这个特征列表
-        segmentation_map = self.decoder(encoder_features)
-        
-        return segmentation_map
+        output = self.decoder(encoder_features)
+        return output
