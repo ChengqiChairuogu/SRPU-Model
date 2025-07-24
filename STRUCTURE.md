@@ -73,8 +73,11 @@ SRPU-Model/
 │   ├── ssl_inspect_task.py              # 自监督模型评估脚本
 │   ├── inference_task.py                # 推理脚本
 │   ├── inspect_validation_results.py    # 验证集结果分析与可视化
-│   ├── multistage_train_task.py         # 多阶段有监督训练主入口
-│   └── multistage_finetune_task.py      # 多阶段微调主入口
+│   └── __init__.py                      # 包初始化
+│
+├── pipelines/                   # 多阶段训练/微调主入口脚本
+│   ├── multistage_train_pipeline.py     # 多阶段有监督训练主入口
+│   └── multistage_finetune_pipeline.py  # 多阶段微调主入口
 │
 ├── utils/                       # 工具函数
 │   ├── augmentation.py                  # 数据增强实现
@@ -84,10 +87,9 @@ SRPU-Model/
 │   ├── logger.py                        # 日志系统适配（wandb/tensorboard），自动管理日志目录和run name
 │   └── training_utils.py                # 训练通用工具（损失函数、评估、训练循环等）
 │
-├── runs/                        # 日志主目录（下分 tensorboard/ 和 wandb/）
-│   ├── tensorboard/             # tensorboard日志（每次实验自动新建子目录）
-│   └── wandb/                   # wandb日志（每次实验自动新建子目录）
+├── tensorboard/                 # tensorboard日志目录
+├── wandb/                       # wandb日志目录（如存在）
+├── .ipynb_checkpoints/          # Jupyter Notebook检查点
 ├── environment.yml              # Conda 环境依赖文件
-├── pipeline.py                  # （预留）统一调度多阶段流程的主入口
 ├── README.md                    # 项目说明文档
 └── STRUCTURE.md                 # 当前项目结构描述文件

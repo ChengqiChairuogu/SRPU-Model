@@ -16,10 +16,10 @@ SRPU-Model/
 ├── json/            # 数据集索引json文件
 ├── models/          # 模型结构与权重
 ├── tasks/           # 各类训练/推理/评估脚本
+├── pipelines/       # 多阶段训练/微调主入口脚本
 ├── utils/           # 工具函数与脚本
-├── runs/            # 日志主目录（下分 tensorboard/ 和 wandb/）
-│   ├── tensorboard/ # tensorboard日志（每次实验自动新建子目录）
-│   └── wandb/       # wandb日志（每次实验自动新建子目录）
+├── tensorboard/     # tensorboard日志目录
+├── wandb/           # wandb日志目录（如存在）
 ├── environment.yml  # Conda环境依赖
 ├── README.md        # 项目说明
 └── STRUCTURE.md     # 结构说明
@@ -80,8 +80,10 @@ SRPU-Model/
 - **ssl_inspect_task.py**：自监督模型评估脚本。
 - **inference_task.py**：推理脚本，将input图片分割并输出掩码。
 - **inspect_validation_results.py**：验证集结果分析与可视化。
-- **multistage_train_task.py**：多阶段有监督训练主入口。
-- **multistage_finetune_task.py**：多阶段微调主入口。
+
+### pipelines/ 多阶段训练/微调主入口
+- **multistage_train_pipeline.py**：多阶段有监督训练主入口。
+- **multistage_finetune_pipeline.py**：多阶段微调主入口。
 
 ### utils/ 工具函数
 - **augmentation.py**：数据增强实现。
@@ -95,7 +97,6 @@ SRPU-Model/
 - **environment.yml**：Conda环境依赖说明。
 - **README.md**：项目说明文档。
 - **STRUCTURE.md**：代码结构和扩展说明。
-- **pipeline.py**：（预留）可用于统一调度多阶段流程的主入口。
 
 ---
 
@@ -137,16 +138,16 @@ python utils/json_generator.py --mode generate_all
   ```
 
 - **日志目录结构已标准化为：**
-  - `runs/tensorboard/任务名_时间戳`  （如 tensorboard 日志）
-  - `runs/wandb/任务名_时间戳`        （如 wandb 日志）
-  - 每次实验会自动在 runs/tensorboard 或 runs/wandb 下新建唯一子目录，便于管理和查找。
+  - `tensorboard/`  （如 tensorboard 日志）
+  - `wandb/`        （如 wandb 日志）
+  - 每次实验会自动在 tensorboard 或 wandb 下新建唯一子目录，便于管理和查找。
 
 ### 日志查看
 - **Wandb**：支持在线/离线模式，详见 [wandb 官网](https://wandb.ai/)。
 - **Tensorboard**：如选择 tensorboard，运行：
 
   ```bash
-  tensorboard --logdir runs/tensorboard
+  tensorboard --logdir tensorboard
   ```
 
   浏览 http://localhost:6006 查看训练曲线。
@@ -174,13 +175,13 @@ python utils/json_generator.py --mode generate_all
   配置：`configs/train/multistage_train_config.py`  
   运行：  
   ```bash
-  python tasks/multistage_train_task.py
+  python pipelines/multistage_train_pipeline.py
   ```
 - **多阶段微调**  
   配置：`configs/finetune/multistage_finetune_config.py`  
   运行：  
   ```bash
-  python tasks/multistage_finetune_task.py
+  python pipelines/multistage_finetune_pipeline.py
   ```
 - 多阶段流程支持每阶段自定义数据集、epoch、学习率、权重加载等，详见对应config文件注释。
 
