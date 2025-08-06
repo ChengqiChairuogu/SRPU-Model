@@ -13,8 +13,8 @@ if str(project_root) not in sys.path:
 
 from datasets.sem_datasets import SemSegmentationDataset
 from models.segmentation_unet import SegmentationUNet
-from utils.training_utils import get_loss_function, train_one_epoch, evaluate_model, pretty_print_metrics
-from utils.logger import Logger
+from utils.training_util import get_loss_function, train_one_epoch, evaluate_model, pretty_print_metrics
+from utils.logging_util import Logger
 from configs.train import train_config as cfg_train
 
 def save_checkpoint(model, optimizer, epoch, train_loss, val_dice, checkpoint_path):

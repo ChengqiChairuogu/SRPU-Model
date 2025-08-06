@@ -14,6 +14,7 @@ STAGES = [
         "encoder_lr": 1e-5,
         "finetune_mode": "finetune_differential",
         "pretrained_encoder_path": Path("models/checkpoints/ssl_pretrained_unet/best_ssl_encoder.pth"),  # 第一阶段可选
+        "pretrained_model_path": None,  # 第一阶段可指定完整预训练模型路径
     },
     {
         "name": "stage2",
@@ -26,8 +27,19 @@ STAGES = [
         "encoder_lr": 1e-6,
         "finetune_mode": "finetune_differential",
         # pretrained_encoder_path留空，自动用stage1输出
+        "pretrained_model_path": None,  # 第二阶段自动使用前一阶段模型
     }
 ]
+
+# --- 预训练模型配置 ---
+USE_PRETRAINED_MODEL = False  # 是否使用预训练模型
+PRETRAINED_MODEL_PATH = Path("models/checkpoints/your_pretrained_model.pth")  # 预训练模型路径
+
+# --- 模型权重保存配置 ---
+MODEL_SAVE_DIR = Path("models/checkpoints/multistage_finetune")  # 模型权重保存目录
+SAVE_BEST_MODEL = True  # 是否保存最佳模型
+SAVE_LAST_MODEL = False  # 是否保存最后一个epoch的模型
+SAVE_CHECKPOINT = True  # 是否保存训练检查点（包含优化器状态）
 
 # --- 模型结构与训练通用参数 ---
 ENCODER_NAME = "unet"

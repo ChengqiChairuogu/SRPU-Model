@@ -14,9 +14,9 @@ from tqdm import tqdm # **关键修正**: 导入tqdm库
 from models.unet_autoencoder import UNetAutoencoder
 import matplotlib.pyplot as plt
 import os
-from utils.training_utils import SSIMLoss, VGGPerceptualLoss
+from utils.training_util import SSIMLoss, VGGPerceptualLoss
 import random
-from utils.logger import Logger
+from utils.logging_util import Logger
 
 # --- 配置与模块导入 ---
 try:
@@ -127,23 +127,24 @@ def train_ssl_mae():
     print(f"--- 开始自监督预训练任务: {cfg_ssl.MODEL_NAME} ---")
     print(f"使用设备: {device}")
 
-    wandb.init(
-        project=cfg_wandb.PROJECT_NAME_SSL,
-        name=f"ssl-{cfg_ssl.MODEL_NAME}-{int(time.time())}",
-        mode=cfg_wandb.WANDB_MODE,
-        config={
-            "encoder": cfg_ssl.ENCODER_NAME,
-            "learning_rate": cfg_ssl.LEARNING_RATE,
-            "epochs": cfg_ssl.NUM_EPOCHS,
-            "batch_size": cfg_ssl.BATCH_SIZE,
-            # "patch_size": cfg_ssl.PATCH_SIZE,  # 已删除
-            "mask_ratio": cfg_ssl.MASK_RATIO,
-        }
-    )
-    if wandb.run is not None:
-        print(f"Wandb 在 '{getattr(wandb.run, 'mode', 'unknown')}' 模式下初始化。")
-    else:
-        print("Wandb 未启用或初始化失败。")
+    # 移除 wandb.init() 和 wandb.watch()
+    # wandb.init(
+    #     project=cfg_wandb.PROJECT_NAME_SSL,
+    #     name=f"ssl-{cfg_ssl.MODEL_NAME}-{int(time.time())}",
+    #     mode=cfg_wandb.WANDB_MODE,
+    #     config={
+    #         "encoder": cfg_ssl.ENCODER_NAME,
+    #         "learning_rate": cfg_ssl.LEARNING_RATE,
+    #         "epochs": cfg_ssl.NUM_EPOCHS,
+    #         "batch_size": cfg_ssl.BATCH_SIZE,
+    #         # "patch_size": cfg_ssl.PATCH_SIZE,  # 已删除
+    #         "mask_ratio": cfg_ssl.MASK_RATIO,
+    #     }
+    # )
+    # if wandb.run is not None:
+    #     print(f"Wandb 在 '{getattr(wandb.run, 'mode', 'unknown')}' 模式下初始化。")
+    # else:
+    #     print("Wandb 未启用或初始化失败。")
 
     json_path = project_root / cfg_ssl.JSON_DIR_NAME / cfg_ssl.UNLABELED_JSON_NAME
     ssl_dataset = SSLDataset(json_file_path=json_path, project_root=project_root)
@@ -174,8 +175,9 @@ def train_ssl_mae():
     
     optimizer = torch.optim.AdamW(model.parameters(), lr=cfg_ssl.LEARNING_RATE, weight_decay=cfg_ssl.WEIGHT_DECAY)
     
-    if wandb.run is not None and getattr(wandb.run, 'mode', None) != "disabled":
-        wandb.watch(model, log="all", log_freq=100)
+    # 移除 wandb.run is not None and getattr(wandb.run, 'mode', None) != "disabled" 的检查
+    # if wandb.run is not None and getattr(wandb.run, 'mode', None) != "disabled":
+    #     wandb.watch(model, log="all", log_freq=100)
     
     checkpoint_dir = project_root / cfg_ssl.SSL_CHECKPOINT_DIR
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
@@ -230,8 +232,12 @@ def train_ssl_mae():
 
         avg_loss = total_loss / len(ssl_loader)
         # === 新增：每个epoch都评估PSNR和SSIM ===
-        avg_psnr, avg_ssim = evaluate_reconstruction_metrics(model, vis_loader, device)
-        print(f"Epoch [{epoch+1}/{cfg_ssl.NUM_EPOCHS}], 平均重建损失: {avg_loss:.6f}, Validation PSNR: {avg_psnr:.4f} dB, SSIM: {avg_ssim:.4f}")
+        if (epoch + 1) % cfg_ssl.EVAL_INTERVAL == 0:
+            avg_psnr, avg_ssim = evaluate_reconstruction_metrics(model, vis_loader, device)
+            print(f"Epoch [{epoch+1}/{cfg_ssl.NUM_EPOCHS}], 平均重建损失: {avg_loss:.6f}, Validation PSNR: {avg_psnr:.4f} dB, SSIM: {avg_ssim:.4f}")
+        else:
+            avg_psnr, avg_ssim = 0.0, 0.0
+            print(f"Epoch [{epoch+1}/{cfg_ssl.NUM_EPOCHS}], 平均重建损失: {avg_loss:.6f} (跳过评估)")
 
         log_dict = {
             "epoch": epoch + 1,
@@ -249,10 +255,11 @@ def train_ssl_mae():
                 best_model_path = project_root / cfg_ssl.BEST_MODEL_CHECKPOINT_PATH
                 print(f"  -> 正在保存 epoch {epoch+1} 的最佳模型编码器至 {best_model_path}...")
                 torch.save(model.encoder.state_dict(), best_model_path)
-                if wandb.run is not None and getattr(wandb.run, 'mode', None) != "disabled":
-                    wandb.save(str(best_model_path)) 
+                # 移除 wandb.run is not None and getattr(wandb.run, 'mode', None) != "disabled" 的检查
+                # if wandb.run is not None and getattr(wandb.run, 'mode', None) != "disabled":
+                #     wandb.save(str(best_model_path)) 
             
-            if vis_batch and wandb.run is not None and getattr(wandb.run, 'mode', None) != "disabled":
+            if vis_batch and vis_batch is not None: # 确保 vis_batch 不为 None
                 model.eval()
                 with torch.no_grad():
                     vis_masked, vis_original, _ = vis_batch
@@ -275,16 +282,18 @@ def train_ssl_mae():
             'optimizer_state_dict': optimizer.state_dict(), 'loss': avg_loss, 'best_loss': best_loss,
         }, resumable_checkpoint_path)
         
-        if wandb.run is not None and getattr(wandb.run, 'mode', None) != "disabled":
-            wandb.log(log_dict)
+        # 移除 wandb.run is not None and getattr(wandb.run, 'mode', None) != "disabled" 的检查
+        # if wandb.run is not None and getattr(wandb.run, 'mode', None) != "disabled":
+        #     wandb.log(log_dict)
         logger.log(log_dict, step=epoch+1)
     logger.close()
 
     final_encoder_path = project_root / cfg_ssl.SSL_ENCODER_FINAL_PATH
     torch.save(model.encoder.state_dict(), final_encoder_path)
-    if wandb.run is not None and getattr(wandb.run, 'mode', None) != "disabled":
-        wandb.save(str(final_encoder_path))
-        wandb.finish()
+    # 移除 wandb.run is not None and getattr(wandb.run, 'mode', None) != "disabled" 的检查
+    # if wandb.run is not None and getattr(wandb.run, 'mode', None) != "disabled":
+    #     wandb.save(str(final_encoder_path))
+    #     wandb.finish()
     
     print(f"训练结束。最终SSL预训练编码器已保存至 {final_encoder_path}")
 

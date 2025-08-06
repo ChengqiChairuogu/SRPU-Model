@@ -24,7 +24,7 @@ try:
     from configs import base as cfg_base
     from configs.inference import inference_config as cfg_inference
     from models.segmentation_unet import SegmentationUNet
-    from utils.augmentation import load_dataset_stats
+    from utils.augmentation_util import load_dataset_stats
 except ImportError as e:
     print(f"错误: 导入模块失败。请确保此脚本位于 'tasks' 文件夹下，且项目结构正确。")
     print(f"具体错误: {e}")
@@ -40,7 +40,7 @@ def create_model(encoder_name: str, decoder_name: str) -> nn.Module:
 
     if encoder_name == 'unet':
         from models.encoders.unet_encoder import UNetEncoder
-        encoder = UNetEncoder(in_channels=cfg_base.INPUT_DEPTH, base_c=64)
+        encoder = UNetEncoder(n_channels=cfg_base.INPUT_DEPTH)
     # 在这里可以继续添加其他编码器的 'elif' 分支
     else:
         raise ValueError(f"未知的编码器名称: '{encoder_name}'")
@@ -48,7 +48,7 @@ def create_model(encoder_name: str, decoder_name: str) -> nn.Module:
     encoder_channels = encoder.get_channels()
     if decoder_name == 'unet':
         from models.decoders.unet_decoder import UNetDecoder
-        decoder = UNetDecoder(encoder_channels, num_classes=cfg_base.NUM_CLASSES)
+        decoder = UNetDecoder(encoder_channels, n_classes=cfg_base.NUM_CLASSES)
     # 在这里可以继续添加其他解码器的 'elif' 分支
     else:
         raise ValueError(f"未知的解码器名称: '{decoder_name}'")
@@ -74,13 +74,13 @@ def build_inference_transforms(height: int, width: int):
         ToTensorV2(),
     ])
 
-def class_to_rgb(pred_mask: np.ndarray, color_map: dict) -> np.ndarray:
+def class_to_rgb(pred_mask: np.ndarray) -> np.ndarray:
     """将单通道的类别掩码转换为彩色的RGB图像。"""
     h, w = pred_mask.shape
     rgb_mask = np.zeros((h, w, 3), dtype=np.uint8)
-    reverse_color_map = {v: k for k, v in color_map.items()}
     
-    for class_idx, color in reverse_color_map.items():
+    # 使用base中的COLOR_MAPPING
+    for class_idx, color in cfg_base.COLOR_MAPPING.items():
         rgb_mask[pred_mask == class_idx] = color
     return rgb_mask
 
@@ -109,8 +109,12 @@ def main_inference():
         print(f"错误: 模型检查点未找到 -> {model_path}")
         return
         
-    # 将权重加载到创建好的模型结构中
-    model.load_state_dict(torch.load(model_path, map_location=device))
+    # 加载模型权重
+    checkpoint = torch.load(model_path, map_location=device)
+    if "model_state_dict" in checkpoint:
+        model.load_state_dict(checkpoint["model_state_dict"])
+    else:
+        model.load_state_dict(checkpoint)
     model.eval()
     print("模型加载成功。")
 
@@ -140,7 +144,7 @@ def main_inference():
                 logits_resized = F.interpolate(logits, size=original_size, mode='bilinear', align_corners=False)
                 pred_mask = torch.argmax(logits_resized, dim=1).squeeze(0).cpu().numpy().astype(np.uint8)
 
-                rgb_mask = class_to_rgb(pred_mask, cfg_base.MAPPING)
+                rgb_mask = class_to_rgb(pred_mask)
                 output_path = output_dir / f"{image_path.stem}_mask.png"
                 Image.fromarray(rgb_mask).save(output_path)
             except Exception as e:

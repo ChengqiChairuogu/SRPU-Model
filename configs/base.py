@@ -26,12 +26,27 @@ NUM_CLASSES = 3  # 只分AM、SE、carbon三类
 # U-Net解码器上采样时是否使用双线性插值 
 BILINEAR = True
 
-
+# 颜色到类别的映射 (RGB -> 类别ID)
 MAPPING = {
     (0,   0, 255): 0,   # carbon
     (0, 255, 255): 1,   # SE
     (255,126,126): 2    # AM
 }
+
+# 类别ID到颜色的映射 (类别ID -> RGB) - 与MAPPING保持一致
+COLOR_MAPPING = {
+    0: [0, 0, 255],      # carbon
+    1: [0, 255, 255],    # SE - 青色
+    2: [255, 126, 126]   # AM - 红色
+}
+
+# 类别名称映射
+CLASS_NAMES = {
+    0: "carbon", 
+    1: "SE", 
+    2: "AM"
+}
+
 NUM_CLASSES = 3
 
 # --- 4. JSON文件命名 (JSON Filename Configuration) ---

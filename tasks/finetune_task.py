@@ -12,10 +12,10 @@ if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
 from datasets.sem_datasets import SemSegmentationDataset
-from datasets.stratified_sampler import create_stratified_dataloader, get_dataset_indices_from_sem_dataset
+from utils.stratified_sample_util import create_stratified_dataloader, get_dataset_indices_from_sem_dataset
 from models.segmentation_unet import SegmentationUNet
-from utils.training_utils import get_loss_function, train_one_epoch, evaluate_model, pretty_print_metrics
-from utils.logger import Logger
+from utils.training_util import get_loss_function, train_one_epoch, evaluate_model, pretty_print_metrics
+from utils.logging_util import Logger
 from configs.finetune import finetune_config as cfg_finetune
 
 def save_checkpoint(model, optimizer, epoch, train_loss, val_dice, checkpoint_path):

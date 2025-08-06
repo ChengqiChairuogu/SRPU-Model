@@ -37,10 +37,11 @@ SAVE_BEST_CHECK_EVERY_N_EPOCHS = 10
 SEED = 42  # 全局随机种子，保证训练和inspect一致
 
 # --- 日志记录配置 ---
-LOGGER = "wandb"  # 可选 "wandb" 或 "tensorboard"
-log_dir = f"runs/{LOGGER}/{MODEL_NAME}"
+LOGGER = 'tensorboard'
+log_dir = f'runs/tensorboard/{MODEL_NAME}'
 log_config = {
-    "logger": LOGGER,
-    "project": "SRPU-Model",
-    "log_dir": log_dir
+    'logger': LOGGER,
+    'project': 'SRPU-Model',
+    'log_dir': log_dir
 }
+EVAL_INTERVAL = 10  # 评估指标计算间隔（epoch数）
