@@ -21,14 +21,16 @@ class Logger:
                     project_name = cfg_wandb.PROJECT_NAME_SUPERVISED
                 wandb = importlib.import_module("wandb")
                 run_name = f"{project_name}_{timestamp}"
-                wandb.init(project=project_name, config=config, name=run_name)
+                # 使用配置的log_dir作为wandb的dir参数
+                wandb.init(project=project_name, config=config, name=run_name, dir=self.log_dir)
                 self._logger = wandb
-                print(f"Wandb初始化完成，项目: {project_name}, run_name: {run_name}")
+                print(f"Wandb初始化完成，项目: {project_name}, run_name: {run_name}, 日志目录: {self.log_dir}")
             except ImportError as e:
                 print(f"警告: 无法导入wandb_config，使用默认配置: {e}")
                 wandb = importlib.import_module("wandb")
                 run_name = f"{self.project}_{timestamp}"
-                wandb.init(project=self.project, config=config, name=run_name)
+                # 使用配置的log_dir作为wandb的dir参数
+                wandb.init(project=self.project, config=config, name=run_name, dir=self.log_dir)
                 self._logger = wandb
         elif self.logger_type == "tensorboard":
             tb = importlib.import_module("torch.utils.tensorboard")
