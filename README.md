@@ -2,7 +2,6 @@
 
 [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch 2.2](https://img.shields.io/badge/pytorch-2.2.0-red.svg)](https://pytorch.org/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 ## 项目简介
 
@@ -447,12 +446,6 @@ A: 使用`python tasks/evaluation_task.py`进行统一评估，支持可视化�
 
 ---
 
-## 许可证
-
-本项目采用MIT许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
-
----
-
 ## 联系我们
 
 如果您有特殊硬件/平台需求、想集成新模型或有大规模实验需求，欢迎联系开发团队。
@@ -465,4 +458,5 @@ A: 使用`python tasks/evaluation_task.py`进行统一评估，支持可视化�
 
 ---
 
-*最后更新时间: 2024年12月*
+*最后更新时间: 2025年8月*
+
