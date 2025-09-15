@@ -1,4 +1,4 @@
-# SRPU-Model: 自进化扫描电镜图像分割平台
+# SRPU-Model: 
 
 [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch 2.2](https://img.shields.io/badge/pytorch-2.2.0-red.svg)](https://pytorch.org/)
@@ -459,4 +459,5 @@ A: 使用`python tasks/evaluation_task.py`进行统一评估，支持可视化�
 ---
 
 *最后更新时间: 2025年8月*
+
 
