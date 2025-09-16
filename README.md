@@ -1,4 +1,4 @@
-# SRPU-Model: 电极SEM表征图象智能分割平台
+# SRPU-Model: 自进化扫描电镜图像分割平台
 
 [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch 2.2](https://img.shields.io/badge/pytorch-2.2.0-red.svg)](https://pytorch.org/)
@@ -15,6 +15,8 @@
 - **全面评估**: 提供定性和定量评估，支持可视化分析
 - **高效训练**: 支持多阶段训练和微调，优化训练效率
 - **智能标注**: 自动生成预测mask，辅助人工标注
+- **图像清晰度评估**: 集成图像清晰度分析功能
+- **SAM集成**: 支持Segment Anything Model (SAM) 标注
 
 ### 技术架构
 
@@ -24,11 +26,13 @@ SRPU-Model/
 ├── data/             # 数据集存储
 ├── datasets/         # PyTorch数据集定义
 ├── models/           # 模型架构与权重
-├── tasks/            # 训练/推理/评估脚本
+├── tasks/            # 任务脚本
 ├── pipelines/        # 多阶段训练管道
 ├── utils/            # 工具函数库
+├── tools/            # 工具脚本
 ├── json/             # 数据集索引文件
-└── active_learning/  # 主动学习输出
+├── active_learning/  # 主动学习输出
+└── docs/             # 项目文档
 ```
 
 ---
@@ -77,7 +81,7 @@ data/
 #### 生成数据集索引
 ```bash
 # 自动生成所有数据集索引
-python json_generator.py --mode generate_all
+python tools/json_generator.py --mode generate_all
 ```
 
 ### 3. 基础训练
@@ -106,14 +110,23 @@ python tasks/finetune_task.py
 python pipelines/multistage_finetune_pipeline.py
 ```
 
-### 4. 模型评估
+### 4. 图像清晰度评估
+```bash
+# 图像清晰度评估任务
+python tasks/image_sharpness_ssl_task.py
+
+# 多清晰度训练管道
+python pipelines/multi_sharpness_training_pipeline.py
+```
+
+### 5. 模型评估
 
 ```bash
 # 统一评估脚本
 python tasks/evaluation_task.py
 ```
 
-### 5. 模型推理
+### 6. 模型推理
 
 ```bash
 # 将待分割图像放入 data/inference/input/
@@ -199,45 +212,34 @@ models/checkpoints/active_learning_unet_unet/
 
 #### 2. 可视化结果
 ```
-active_learning_results/
-├── round_1/
-│   ├── sample1_uncertainty.png    # 不确定性热力图
-│   ├── sample2_uncertainty.png
+active_learning/
+├── iteration_1/
+│   ├── LPSCl-051.png         # 选择的样本图像
+│   ├── LPSCl-051_prediction_mask.png  # 预测mask
 │   └── selection_summary.json     # 选择摘要
-├── round_2/
+├── iteration_2/
 │   └── ...
 ```
 
-#### 3. 预测Mask输出
-```
-active_learning_predictions/
-├── round_1/
-│   ├── sample1_predicted_mask.png    # 预测mask
-│   ├── sample2_predicted_mask.png
-│   └── selection_info.json           # 选择信息
-├── round_2/
-│   └── ...
-```
+---
 
-### 手动标注指南
+## 图像清晰度功能
 
-#### 使用ImageJ进行标注
-1. **下载预测文件**
+### 概述
+图像清晰度模块用于评估SEM图像的清晰度质量，支持多清晰度训练策略。
+
+### 核心功能
+- **清晰度评估**: 自动计算图像清晰度分数
+- **多清晰度训练**: 支持不同清晰度级别的模型训练
+- **清晰度处理**: 自动处理不同清晰度的图像数据
+
+### 使用方法
 ```bash
-scp -r username@server_ip:~/SRPU-Model/active_learning/predictions/iteration_1/ ./
-```
+# 图像清晰度评估
+python tasks/image_sharpness_ssl_task.py
 
-2. **使用ImageJ调整**
-   - 打开ImageJ应用程序
-   - 加载预测mask图像
-   - 使用画笔工具修正边界
-   - 应用形态学操作平滑边缘
-   - 保存修改后的mask
-
-3. **上传标注文件**
-```bash
-scp image_name_mask.png username@server_ip:~/SRPU-Model/data/labeled/
-scp image_name.png username@server_ip:~/SRPU-Model/data/labeled/
+# 多清晰度训练
+python pipelines/multi_sharpness_training_pipeline.py
 ```
 
 ---
@@ -290,6 +292,7 @@ COLOR_MAPPING = {
 - **多阶段训练**: `configs/train/multistage_train_config.py`
 - **微调配置**: `configs/finetune/finetune_config.py`
 - **自监督配置**: `configs/selfup/ssl_config.py`
+- **图像清晰度配置**: `configs/image_sharpness/`
 
 ### 日志系统
 ```python
@@ -311,30 +314,44 @@ configs/
 ├── dataset_config.py          # 数据集配置
 ├── wandb_config.py           # 日志系统配置
 ├── active_learning/          # 主动学习配置
+│   ├── active_learning_config.py
+│   └── sam_config.py
 ├── train/                    # 训练配置
 ├── finetune/                 # 微调配置
 ├── inference/                # 推理配置
-└── selfup/                   # 自监督配置
+├── selfup/                   # 自监督配置
+└── image_sharpness/          # 图像清晰度配置
 ```
 
 #### tasks/ - 任务脚本
 ```
 tasks/
-├── train_task.py             # 监督训练
-├── finetune_task.py          # 模型微调
-├── ssl_pretrain_task.py      # 自监督预训练
-├── active_learning_task.py   # 主动学习
-├── inference_task.py         # 模型推理
-├── evaluation_task.py        # 模型评估
-└── ssl_inspect_task.py      # 自监督评估
+├── active_learning_task.py           # 主动学习任务
+├── enhanced_active_learning_task.py  # 增强版主动学习任务
+├── ssl_pretrain_task.py             # 自监督预训练
+├── ssl_inspect_task.py              # 自监督评估
+├── train_task.py                    # 监督训练
+├── finetune_task.py                 # 模型微调
+├── evaluation_task.py               # 模型评估
+├── inference_task.py                # 模型推理
+└── image_sharpness_ssl_task.py      # 图像清晰度评估
+```
+
+#### pipelines/ - 多阶段训练管道
+```
+pipelines/
+├── multistage_train_pipeline.py      # 多阶段训练
+├── multistage_finetune_pipeline.py   # 多阶段微调
+└── multi_sharpness_training_pipeline.py  # 多清晰度训练
 ```
 
 #### models/ - 模型架构
 ```
 models/
 ├── segmentation_unet.py       # U-Net分割模型
-├── unet_autoencoder.py       # U-Net自编码器
-├── mae_model.py              # MAE自监督模型
+├── ssl_unet_autoencoder.py   # U-Net自编码器（自监督学习）
+├── ssl_mae_model.py          # MAE自监督模型
+├── image_sharpness_unet.py   # 图像清晰度UNet模型
 ├── encoders/                 # 编码器模块
 │   ├── efficientnet_encoder.py
 │   ├── dinov2_encoder.py
@@ -354,14 +371,18 @@ utils/
 ├── uncertainty_util.py       # 不确定性计算
 ├── logging_util.py           # 日志管理
 ├── stratified_sample_util.py # 分层采样
+├── image_sharpness_util.py   # 图像清晰度工具
+├── sam_annotation_util.py    # SAM标注工具
 └── ...
 ```
 
-#### pipelines/ - 多阶段训练
+#### tools/ - 工具脚本
 ```
-pipelines/
-├── multistage_train_pipeline.py      # 多阶段训练
-└── multistage_finetune_pipeline.py   # 多阶段微调
+tools/
+├── json_generator.py          # JSON索引生成器
+├── image_sharpness_processor.py  # 图像清晰度处理器
+├── pretrained_model_manager.py   # 预训练模型管理器
+└── ...
 ```
 
 ---
@@ -381,6 +402,9 @@ python pipelines/multistage_train_pipeline.py
 
 # 多阶段微调
 python pipelines/multistage_finetune_pipeline.py
+
+# 多清晰度训练
+python pipelines/multi_sharpness_training_pipeline.py
 ```
 
 ### 预训练模型使用
@@ -458,6 +482,4 @@ A: 使用`python tasks/evaluation_task.py`进行统一评估，支持可视化�
 
 ---
 
-*最后更新时间: 2025年8月*
-
-
+*最后更新时间: 2024年12月*
